@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NameMaker.MainPage">
+  <ContentPage.Padding>
+    <OnPlatform x:TypeArguments="Thickness"
+                iOS="20, 40, 20, 20"
+                Android="20, 20, 20, 20"
+                WinPhone="20, 20, 20, 20" />
+  </ContentPage.Padding>
+  <ContentPage.Content>
+    <StackLayout VerticalOptions="FillAndExpand"
+                 HorizontalOptions="FillAndExpand"
+                 Orientation="Vertical"
+                 Spacing="15">
+      <Label Text="Wort:" />
+      <Entry x:Name="NameText" Text="" />
+      <Button x:Name="buildNameButton" Text="Generiere Namen" Clicked="OnBuild" />
+      <ListView x:Name="namesList" Header="Erstellte Namen" IsPullToRefreshEnabled="true" ItemSelected="OnSelect">
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <TextCell Text="{Binding DisplayName}" />
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+      <Label x:Name="emailLabel" IsVisible="False"/>
+      <Button x:Name="ScanPageButton" Text="Scannertest" Clicked="ScanPageButtonClick"/>
+      <Button x:Name="GlossaryPageButton" Text="Glossar" Clicked="GlossaryPageButtonClick"></Button>
+      <Button x:Name="InformationOverviewButton" Text="Informationen" Clicked="InformationOverviewButtonClick"/>
+      <Button x:Name="MyPiccButton" Text="PICC" Clicked="MyPiccButtonClick"/>
+    </StackLayout>
+
+  </ContentPage.Content>
+</ContentPage>

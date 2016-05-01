@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NameMaker.BarCodeScannerPage">
+  <ContentPage.Padding>
+    <OnPlatform x:TypeArguments="Thickness"
+                iOS="20, 40, 20, 20"
+                Android="20, 20, 20, 20"
+                WinPhone="20, 20, 20, 20" />
+  </ContentPage.Padding>
+  <ContentPage.Content>
+    <StackLayout VerticalOptions="Fill"
+                 HorizontalOptions="Fill"
+                 Orientation="Vertical"
+                 Spacing="0"
+                 Padding="0,0,0,0">
+      <Button x:Name="ScanButton" Text="Barcode Scan" Clicked="ScanClick"/>
+      <Label x:Name="ScanResult"></Label>
+      <StackLayout IsVisible="False">
+        <Label x:Name="Testlabel1" Text="Die folgenden Informationen sollen Sie im Umgang mit Ihrem peripher eingeführten zentralen"/>
+        <Label x:Name="GlossaryLabel" Text="Venenkatheter PICC" TextColor="Teal" />
+        <Label x:Name="Testlabel2" Text="unterstützen. Diese Broschüre wird allen Patientinnen und Patienten ausgehändigt, denen ein PICC eingelegt wird. Wir bitten Sie, die Broschüre sorgfältig durchzulesen. Ihre Pflegefachperson oder Ihr Arzt können die in dieser Broschüre beschriebenen Verfahren abändern, damit sie Ihren individuellen Bedürfnissen bestmöglich entsprechen. Wenn Sie Fragen zu Ihrem Katheter haben, wenden Sie sich bitte an Ihre Pflegefachperson oder Ihren Arzt.">
+        </Label>
+      </StackLayout>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

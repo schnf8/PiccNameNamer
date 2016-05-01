@@ -1,2 +1,2 @@
-# PiccNameNamer
-LC2 Testproject
+# NameMaker
+Testproject for LC2

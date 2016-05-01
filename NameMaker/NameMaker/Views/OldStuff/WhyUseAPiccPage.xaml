@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NameMaker.Views.WhyUseAPiccPage"
+             Title="Wozu wird ein PICC verwendet?"
+             >
+  <ContentPage.Padding>
+    <OnPlatform x:TypeArguments="Thickness"
+                iOS="20, 40, 20, 20"
+                Android="20, 20, 20, 20"
+                WinPhone="20, 20, 20, 20" />
+  </ContentPage.Padding>
+  <ContentPage.Content>
+    <ScrollView>
+      <StackLayout Orientation="Vertical" HorizontalOptions="Fill">
+        <Label VerticalOptions="Fill">
+          <Label.Text>
+Ein PICC ist für die Verabreichung von Flüssigkeiten, von Blutprodukten, Medikamenten und intravenösen Nährlösungen bestimmt. Er kann auch zur Abnahme von Blutproben verwendet werden. Ein PICC kann je nach Therapie mehrere Wochen oder Monate in einer Vene verbleiben.
+
+Der PICC ist insbesondere dann sinnvoll, wenn Ihnen im Rahmen einer Therapie zahlreiche Infusionen verabreicht werden müssen. Dank dem Venenzugang über den PICC müssen die Fachleute nicht für jede Infusion eine neue Einstichstelle schaffen. Der PICC verhindert somit, dass Ihre Venen an Hand und Arm durch diverse Einstiche belastet werden.
+
+Die Verabreichung Ihrer Therapie wird durch den PICC zuverlässiger, komfortabler und einfacher.
+          </Label.Text>
+        </Label>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+
+          <Image x:Name="Picc" Source="EinlumigerPICC.PNG" Aspect="AspectFit" HeightRequest="300" WidthRequest="150" />
+          <Label Text="" HorizontalTextAlignment="Center">
+            <Label.Text>
+              Einlumiger PICC:
+              Weiches, flexibles Kathetermaterial.
+            </Label.Text>
+          </Label>
+          <ListView Header="Glossareinträge" x:Name="GlossaryList" ItemSelected="OnSelect"/>
+        </StackLayout>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>

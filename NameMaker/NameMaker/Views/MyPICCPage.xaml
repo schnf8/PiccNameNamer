@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NameMaker.Views.MyPICCPage">
+  <ContentPage.Padding>
+    <OnPlatform x:TypeArguments="Thickness"
+                iOS="20, 40, 20, 20"
+                Android="20, 20, 20, 20"
+                WinPhone="20, 20, 20, 20" />
+  </ContentPage.Padding>
+  <ContentPage.Content>
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition  Height="40"/>
+        <RowDefinition Height="20"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Grid.Row="0">
+        <Entry x:Name="PiccEntry" Placeholder="Bitte PICC Name eingeben"/>
+        <Button x:Name="PiccSearchButton" Text="Suchen" Clicked="PiccSearchButtonClicked"></Button>
+      </StackLayout>
+      <StackLayout x:Name="PiccInformation" Orientation="Vertical" Grid.Row="2" IsVisible="False">
+        <Label x:Name="PiccName"></Label>
+        <Label Text="Legedatum:" HorizontalOptions="Fill" WidthRequest="80" />
+        <DatePicker x:Name="InsertedDate">
+          <DatePicker.Format>dd. MMMM yyyy</DatePicker.Format>
+        </DatePicker>
+        <Label Text="Legeort:" HorizontalOptions="Fill" WidthRequest="80" />
+
+        <Picker x:Name="Country" SelectedIndexChanged="SideSelected"></Picker>
+        
+        <Picker x:Name="InsertedPlaceCH" IsVisible="False"/>
+        <Entry x:Name="InsertedPlaceAbroad" IsVisible="False"></Entry>
+        
+        <Label Text="Körperseite PICC" ></Label>
+        <Picker x:Name="PiccSide"></Picker>
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+          <Button x:Name="Save" Text="Speichern" Clicked="SaveButtonClicked"/>
+          <Button x:Name="Cancel" Text="Abbrechen" Clicked="CancelButtonClicked"/>
+        </StackLayout>
+      </StackLayout>
+    </Grid>
+  </ContentPage.Content>
+</ContentPage>

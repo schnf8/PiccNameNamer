@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NameMaker.Views.WhatIsAPICCPage"
+             Title="Was ist ein PICC?">
+  <ContentPage.Padding>
+    <OnPlatform x:TypeArguments="Thickness"
+                iOS="20, 40, 20, 20"
+                Android="20, 20, 20, 20"
+                WinPhone="20, 20, 20, 20" />
+  </ContentPage.Padding>
+  <ContentPage.Content>
+    <ScrollView>
+      <StackLayout Orientation="Vertical" HorizontalOptions="Fill">
+        <Label VerticalOptions="Fill">
+          <Label.Text>
+Ihr zentraler PICC Venenkatheter besteht aus weichem, flexiblem Material (Silikon oder Polyurethan). Der lange, schmale Katheter ist mit einem breiteren, verstärkten Ansatz aus Kunststoff, sowie je nach Ausführung mit einer Kunststoffklemme und mit «Flügeln» ausgestattet. Durch diese Flügel kann der Katheter besser auf der Haut ﬁxiert werden. Am äusseren Ende ist eine Schutzkappe angebracht. Diese verhindert, dass Blut zurück in den Katheter fliesst (siehe MicroClave).
+
+Manchmal verschreibt der Arzt einen Katheter mit zwei separaten Kanälen (doppellumiger Katheter). Diese zwei Kanäle ermöglichen die Verabreichung unterschiedlicher Substanzen.
+          </Label.Text>
+        </Label>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+          <Image x:Name="Picc" Source="DoppellumigerPICC.PNG" Aspect="AspectFit" HeightRequest="300" WidthRequest="150" />
+          <Label Text="Doppellumiger PICC: Kunststoffklemme zum Verschliessen des Katheters." HorizontalTextAlignment="Center"/>
+          <ListView Header="Glossareinträge" x:Name="GlossaryList" ItemSelected="OnSelect"/>
+        </StackLayout>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>
