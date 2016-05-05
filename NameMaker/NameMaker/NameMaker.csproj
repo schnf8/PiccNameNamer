@@ -36,23 +36,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="Classes and Interfaces\AllPiccModels.cs" />
-    <Compile Include="Classes and Interfaces\CurrentAndOldPiccs.cs" />
-    <Compile Include="Classes and Interfaces\ImageElement.cs" />
-    <Compile Include="Classes and Interfaces\KnowledgeEntry.cs" />
-    <Compile Include="Classes and Interfaces\KnowledgeEntryElement.cs" />
-    <Compile Include="Classes and Interfaces\KnowledgePageEntries.cs" />
-    <Compile Include="Classes and Interfaces\Picc.cs" />
-    <Compile Include="Classes and Interfaces\TextElement.cs" />
+    <Compile Include="ModelViewController\CurrentPiccModelView.cs" />
+    <Compile Include="Model\AllPiccModels.cs" />
+    <Compile Include="ModelViewController\CurrentAndOldPiccs.cs" />
+    <Compile Include="Model\ImageElement.cs" />
+    <Compile Include="Model\KnowledgeEntry.cs" />
+    <Compile Include="Model\KnowledgeEntryElement.cs" />
+    <Compile Include="Model\KnowledgePageEntries.cs" />
+    <Compile Include="Model\Picc.cs" />
+    <Compile Include="Model\TextElement.cs" />
     <Compile Include="Views\BarCodeScannerPage.xaml.cs">
       <DependentUpon>BarCodeScannerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes and Interfaces\GlossaryEntries.cs" />
-    <Compile Include="Classes and Interfaces\GlossaryEntry.cs" />
+    <Compile Include="Model\GlossaryEntries.cs" />
+    <Compile Include="Model\GlossaryEntry.cs" />
     <Compile Include="Views\GlossaryPage.xaml.cs">
       <DependentUpon>GlossaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes and Interfaces\IScanner.cs" />
+    <Compile Include="Model\IScanner.cs" />
     <Compile Include="Views\InformationOverviewPage.xaml.cs">
       <DependentUpon>InformationOverviewPage.xaml</DependentUpon>
     </Compile>
@@ -62,9 +63,12 @@
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes and Interfaces\Name.cs" />
-    <Compile Include="Classes and Interfaces\NameTranslator.cs" />
+    <Compile Include="Model\Name.cs" />
+    <Compile Include="Model\NameTranslator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\SearchAPiccPage.xaml.cs">
+      <DependentUpon>SearchAPiccPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MyPICCPage.xaml.cs">
       <DependentUpon>MyPICCPage.xaml</DependentUpon>
     </Compile>
@@ -95,6 +99,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Windows.Foundation.UniversalApiContract">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\References\Windows.Foundation.UniversalApiContract\1.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
+    </Reference>
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.2.1.0.6529\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.Core.dll</HintPath>
       <Private>True</Private>
@@ -146,6 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\MyPICCPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\SearchAPiccPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NameMaker.Classes_and_Interfaces
+namespace NameMaker.Models
 {
     public class TextElement : KnowledgeEntryElement
     {

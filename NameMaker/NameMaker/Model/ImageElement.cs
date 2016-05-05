@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace NameMaker.Classes_and_Interfaces
+namespace NameMaker.Models
 {
     public class ImageElement : KnowledgeEntryElement
     {

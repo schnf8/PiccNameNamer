@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
-namespace NameMaker.Classes_and_Interfaces
+namespace NameMaker.Models
 {
     class Picc
     {
@@ -13,12 +14,13 @@ namespace NameMaker.Classes_and_Interfaces
 
         public string barcode { get; set; }
         public DateTime insertDate { get; set; }
-        public string insertCountry { get; set; }
+        // 1 is for Switzerland, 2 for abroad
+        public int insertCountry { get; set; }
         public string insertCity { get; set; }
-        public string piccSide { get; set; }
+        public int piccSide { get; set; }
 
 
-        public Picc(string piccName, double frenchSize, string barcode, DateTime insertDate, string insertCountry, string insertCity, string piccSide)
+        public Picc(string piccName, double frenchSize, string barcode, DateTime insertDate, int insertCountry, string insertCity, int piccSide)
         {
             this.piccName = piccName;
             this.frenchSize = frenchSize;
@@ -39,13 +41,13 @@ namespace NameMaker.Classes_and_Interfaces
 
             }
 
-            if (insertCountry != null)
+            if (insertCountry != 0)
             {
                 this.insertCountry = insertCountry;
 
             }
 
-            if (piccSide != null)
+            if (piccSide != 0)
             {
                 this.piccSide = piccSide;
 

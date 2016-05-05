@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NameMaker.Views.SearchAPiccPage"
+             Title="PICC Modell suchen">
+
+  <ContentPage.Padding>
+    <OnPlatform x:TypeArguments="Thickness"
+                iOS="20, 40, 20, 20"
+                Android="20, 20, 20, 20"
+                WinPhone="20, 20, 20, 20" />
+  </ContentPage.Padding>
+  <ContentPage.Content>
+    <ScrollView>
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition  Height="100"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackLayout Orientation="Vertical" Grid.Row="0">
+          <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+            <Entry x:Name="PiccEntry" Placeholder="Bitte PICC Name eingeben"/>
+            <Button x:Name="PiccSearchButton" Text="Suchen" Clicked="PiccSearchButtonClicked"></Button>
+          </StackLayout>
+          <Button Text="Barcode scannen"></Button>
+        </StackLayout>
+        <StackLayout x:Name="PiccInformation" Orientation="Vertical" Grid.Row="1" IsVisible="False">
+          <Label x:Name="PiccName" Text="{Binding PiccName, Mode=OneWay}"></Label>
+
+          <Label Text="Legedatum:" HorizontalOptions="Fill" WidthRequest="80" />
+          <DatePicker x:Name="InsertedDate" Date="{Binding InsertDate, Mode=OneWay}">
+            <DatePicker.Format>dd. MMMM yyyy</DatePicker.Format>
+          </DatePicker>
+          <Label Text="Legeort:" HorizontalOptions="Fill" WidthRequest="80" />
+
+          <Picker x:Name="Country" SelectedIndex="{Binding InsertCountry, Mode=OneWay}" SelectedIndexChanged="SideSelected"></Picker>
+
+          <Picker x:Name="InsertedPlaceCH" IsVisible="False"/>
+          <Entry x:Name="InsertedPlaceAbroad" IsVisible="False"></Entry>
+
+          <Label Text="Körperseite PICC" ></Label>
+          <Picker x:Name="PiccSide" SelectedIndex="{Binding PiccSide, Mode=OneWay}"></Picker>
+
+          <Label Text="Grösse in French" ></Label>
+          <Entry x:Name="PiccFrench" Text="{Binding FrenchSize, Mode=OneWay}"></Entry>
+
+          <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+            <Button x:Name="Save" Text="Speichern" Clicked="SaveButtonClicked"/>
+            <Button x:Name="Cancel" Text="Abbrechen" Clicked="CancelButtonClicked"/>
+          </StackLayout>
+        </StackLayout>
+      </Grid>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>
