@@ -16,8 +16,6 @@ namespace NameMaker.Views
             InitializeComponent();
             addPageElements(selectedEntry);
             // TitleProperty.PropertyName.Replace("test", selectedEntry.title);
-
-
         }
 
         void OnSelect(object sender, EventArgs e)
@@ -59,11 +57,11 @@ namespace NameMaker.Views
                     }
                     else if (entry.type == "image")
                     {
-                        
+
                         Image currentImage = (Image)entry.element;
                         currentImage.Aspect = Aspect.AspectFit;
                         currentImage.HeightRequest = 300;
-                        currentImage.WidthRequest = 150;                        
+                        currentImage.WidthRequest = 150;
 
                         addTabGestureRecognizerToImage(entry);
                         KnowledgeEntryPageLayout.Children.Insert(index, currentImage);
@@ -71,18 +69,18 @@ namespace NameMaker.Views
 
                         //Checks if a caption is set. If yes, a new label for the caption will be generated
                         ImageElement imgElem = (ImageElement)entry;
-                        if(imgElem.caption != null)
+                        if (imgElem.caption != null)
                         {
                             KnowledgeEntryPageLayout.Children.Insert(index, (new Label
                             {
                                 Text = imgElem.caption,
                                 HorizontalTextAlignment = TextAlignment.Center
-                                
+
                             }));
                             index++;
                         }
-                        
-                }
+
+                    }
                 }
             }
         }
@@ -95,7 +93,7 @@ namespace NameMaker.Views
             TapGestureRecognizer tapGesture = new TapGestureRecognizer();
             tapGesture.Tapped += (s, e) =>
             {
-                             
+
 
                 if (imageElem != null)
                 {

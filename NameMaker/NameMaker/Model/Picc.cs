@@ -11,47 +11,25 @@ namespace NameMaker.Models
     {
         public string piccName { get; set; }
         public double frenchSize { get; set; }
-
+        public string uri { get; set; }
         public string barcode { get; set; }
         public DateTime insertDate { get; set; }
-        // 1 is for Switzerland, 2 for abroad
-        public int insertCountry { get; set; }
+        public string insertCountry { get; set; }
         public string insertCity { get; set; }
-        public int piccSide { get; set; }
+        public string piccSide { get; set; }
+        public string piccPosition { get; set; }
 
-
-        public Picc(string piccName, double frenchSize, string barcode, DateTime insertDate, int insertCountry, string insertCity, int piccSide)
+        public Picc(string piccName, double frenchSize, string uri, string barcode, DateTime insertDate, string insertCountry, string insertCity, string piccSide, string piccPosition)
         {
             this.piccName = piccName;
             this.frenchSize = frenchSize;
-
-            if (barcode != null)
-            {
-                this.barcode = barcode;
-            }
-
-            if (insertDate != null)
-            {
-                this.insertDate = insertDate;
-            }
-
-            if (insertCity != null)
-            {
-                this.insertCity = insertCity;
-
-            }
-
-            if (insertCountry != 0)
-            {
-                this.insertCountry = insertCountry;
-
-            }
-
-            if (piccSide != 0)
-            {
-                this.piccSide = piccSide;
-
-            }
+            this.uri = uri;
+            this.barcode = barcode;
+            this.insertDate = insertDate;
+            this.insertCity = insertCity;
+            this.insertCountry = insertCountry;
+            this.piccSide = piccSide;
+            this.piccPosition = piccPosition;
         }
     }
 }

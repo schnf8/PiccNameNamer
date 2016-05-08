@@ -35,6 +35,15 @@ namespace NameMaker.Views
         public SearchAPiccPage()
         {
             LoadSearchAPiccPage();
+
+            // Adds a Gesture Regognizer to the picture element, 
+            TapGestureRecognizer tapGesture = new TapGestureRecognizer();
+            tapGesture.Tapped += (s, e) =>
+            {
+                Navigation.PushAsync(new PicturePage((new ImageElement(PiccImage))));
+            };
+            PiccImage.GestureRecognizers.Add(tapGesture);
+
         }
 
 
@@ -60,10 +69,8 @@ namespace NameMaker.Views
             }
             else
             {
-
                 InsertedPlaceCH.IsVisible = false;
                 InsertedPlaceAbroad.IsVisible = false;
-
             }
         }
 
@@ -78,10 +85,12 @@ namespace NameMaker.Views
                 {
                     currentPicc = piccModel;
                     BindingContext = new CurrentPiccModelView(currentPicc);
-                    
 
                     //enables the view to add more information for selected picc
                     PiccInformation.IsVisible = true;
+
+                    //disables the image element if the source is null
+                    if (PiccImage.Source == null) { PiccImage.IsVisible = false; }
 
                     //Enables the save and cancel buttons
                     Save.IsEnabled = true;
@@ -93,12 +102,9 @@ namespace NameMaker.Views
                 //only for test!!!
                 if (searchName == "e")
                 {
-
                     //Adds the model to the local currentPicc object
                     currentPicc = piccModel;
                     this.BindingContext = new CurrentPiccModelView(currentPicc);
-
-                    
 
                     //enables the view to add more information for selected picc
                     PiccInformation.IsVisible = true;
@@ -149,20 +155,24 @@ namespace NameMaker.Views
         //Add all options to the picker objects (countries, cities and bodyside)
         private void addAllOptions()
         {
-            Country.Items.Add(" ");
+            Country.Items.Add("");
             Country.Items.Add("Schweiz");
             Country.Items.Add("Ausland");
 
-            InsertedPlaceCH.Items.Add(" ");
+            InsertedPlaceCH.Items.Add("");
             InsertedPlaceCH.Items.Add("Inselspital Bern");
             InsertedPlaceCH.Items.Add("UniversitätsSpital Zürich");
             InsertedPlaceCH.Items.Add("Universitätsspital Basel");
             InsertedPlaceCH.Items.Add("Universitätsspital Genf");
             InsertedPlaceCH.Items.Add("Andere Einrichtung");
 
-            PiccSide.Items.Add(" ");
+            PiccSide.Items.Add("");
             PiccSide.Items.Add("Rechts");
             PiccSide.Items.Add("Links");
+
+            PiccPosition.Items.Add("");
+            PiccPosition.Items.Add("Oberhalb Ellbogen");
+            PiccPosition.Items.Add("Unterhalb Ellbogen");
 
         }
 
@@ -178,21 +188,19 @@ namespace NameMaker.Views
                 return;
             }
 
-
-            if (InsertedPlaceCH.SelectedIndex == SWITZERLAND)
-                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.barcode, InsertedDate.Date, Country.SelectedIndex, InsertedPlaceCH.Items.ElementAt(InsertedPlaceCH.SelectedIndex), PiccSide.SelectedIndex);
-
-
-            else if (InsertedPlaceCH.SelectedIndex == ABROAD)
+            /// Checks if either "Schweiz", "Ausland" or nothing is selected as country. According to the choice, the picc object will be generated in a different way.
+            if (Country.SelectedIndex == SWITZERLAND)
             {
+                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.uri, currentPicc.barcode, InsertedDate.Date, Country.Items.ElementAtOrDefault(Country.SelectedIndex), InsertedPlaceCH.Items.ElementAtOrDefault(InsertedPlaceCH.SelectedIndex), PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex), PiccPosition.Items.ElementAtOrDefault(PiccPosition.SelectedIndex));
+            }
 
-                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.barcode, InsertedDate.Date, Country.SelectedIndex, InsertedPlaceAbroad.Text, PiccSide.SelectedIndex);
-
+            else if (Country.SelectedIndex == ABROAD)
+            {
+                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.uri, currentPicc.barcode, InsertedDate.Date, Country.Items.ElementAtOrDefault(Country.SelectedIndex), InsertedPlaceAbroad.Text, PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex), PiccPosition.Items.ElementAtOrDefault(PiccPosition.SelectedIndex));
             }
             else
             {
-                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.barcode, InsertedDate.Date, Country.SelectedIndex, "", PiccSide.SelectedIndex);
-
+                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.uri, currentPicc.barcode, InsertedDate.Date, Country.Items.ElementAtOrDefault(Country.SelectedIndex), "", PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex), PiccPosition.Items.ElementAtOrDefault(PiccPosition.SelectedIndex));
             }
 
             // Saves the currentPicc object in the list and moves back to the MyPiccPage.

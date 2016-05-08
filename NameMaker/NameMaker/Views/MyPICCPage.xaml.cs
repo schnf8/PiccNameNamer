@@ -11,6 +11,7 @@ using Xamarin.Forms;
 
 namespace NameMaker.Views
 {
+
     public partial class MyPICCPage : ContentPage
     {
         /// <summary>
@@ -24,15 +25,17 @@ namespace NameMaker.Views
         private readonly int SWITZERLAND = 1;
         private readonly int ABROAD = 2;
 
+        private Picc currentPicc;
+
 
         public MyPICCPage()
         {
             loadMyPiccPage();
-
+                       
         }
 
         /// <summary>
-        /// This method initalizes the page and also add all needed information to the
+        /// This method initalizes the page and also add all needed information to the information panel, if the user has already registerd a picc
         /// </summary>
         private void loadMyPiccPage()
         {
@@ -42,18 +45,35 @@ namespace NameMaker.Views
             //Checks if a current picc is saved and bind the information to the page
             if (CurrentAndOldPiccs.currentAndOldPiccs.Count() != 0)
             {
-                BindingContext = new CurrentPiccModelView(CurrentAndOldPiccs.currentAndOldPiccs.Last());
-                PiccInformation.IsVisible = true;
-                EditButton.IsVisible = true;
-
-                if (PiccFrench.Text == "0")
+                //If not set, copy the current datas of the picc object. The current picc object will be needed if the cancel buttons has been clicked.
+                if (currentPicc == null)
                 {
-                    PiccFrench.IsVisible = false;
+                    currentPicc = new Picc(CurrentAndOldPiccs.currentAndOldPiccs.Last().piccName, CurrentAndOldPiccs.currentAndOldPiccs.Last().frenchSize, CurrentAndOldPiccs.currentAndOldPiccs.Last().uri, CurrentAndOldPiccs.currentAndOldPiccs.Last().barcode, CurrentAndOldPiccs.currentAndOldPiccs.Last().insertDate,
+                   CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCountry, CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity, CurrentAndOldPiccs.currentAndOldPiccs.Last().piccSide, CurrentAndOldPiccs.currentAndOldPiccs.Last().piccPosition);
+
                 }
 
+                //Load the current carried picc to the binding context
+                BindingContext = new CurrentPiccModelView(CurrentAndOldPiccs.currentAndOldPiccs.Last());
+
+                //make the information panel visible and the edit button visible
+                PiccInformation.IsVisible = true;
+                EditButton.IsVisible = true;
             }
 
             enablePiccDetails(false);
+
+            // Adds a Gesture Regognizer to the picture element, 
+            if (PiccImage.Source != null)
+            {
+                TapGestureRecognizer tapGesture = new TapGestureRecognizer();
+                tapGesture.Tapped += (s, e) =>
+                {
+                    Navigation.PushAsync(new PicturePage((new ImageElement(PiccImage))));
+                };
+                PiccImage.GestureRecognizers.Add(tapGesture);
+            }
+            else { PiccImage.IsVisible = false; }
 
         }
 
@@ -64,6 +84,7 @@ namespace NameMaker.Views
         {
             base.OnAppearing();
             loadMyPiccPage();
+
         }
 
         /// <summary>
@@ -90,27 +111,30 @@ namespace NameMaker.Views
 
                 InsertedPlaceCH.IsVisible = false;
                 InsertedPlaceAbroad.IsVisible = false;
-
             }
         }
 
-
         void SaveButtonClicked(object o, EventArgs e)
         {
-            savePiccChanges();
-
+            currentPicc = null;
+            loadMyPiccPage();
         }
 
         void CancelButtonClicked(object o, EventArgs e)
         {
+            //Sets all the values back to the previous values
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertDate = currentPicc.insertDate;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().frenchSize = currentPicc.frenchSize;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = currentPicc.insertCity;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCountry = currentPicc.insertCountry;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().piccSide = currentPicc.piccSide;
+
             loadMyPiccPage();
         }
 
         void EditButtonClicked(object o, EventArgs e)
         {
             enablePiccDetails(true);
-            PiccFrench.IsVisible = true;
-
         }
 
         void AddAPiccButtonClicked(object o, EventArgs e)
@@ -130,6 +154,7 @@ namespace NameMaker.Views
             InsertedPlaceAbroad.IsEnabled = yesOrNo;
             InsertedPlaceCH.IsEnabled = yesOrNo;
             PiccSide.IsEnabled = yesOrNo;
+            PiccPosition.IsEnabled = yesOrNo;
             PiccFrench.IsEnabled = yesOrNo;
             Country.IsEnabled = yesOrNo;
 
@@ -148,73 +173,83 @@ namespace NameMaker.Views
             if (choice)
             {
                 InsertedPlaceCH.IsVisible = true;
+
                 InsertedPlaceAbroad.IsVisible = false;
             }
             else
             {
 
                 InsertedPlaceCH.IsVisible = false;
+
                 InsertedPlaceAbroad.IsVisible = true;
             }
 
         }
 
-        /// <summary>
-        /// This method saves all changes to the current picc object. 
-        /// </summary>
-        private void savePiccChanges()
-        {
-            // Checks if the entered french size is in double format. If not, a popup will inform the user.
-            double frenchSize;
-            if (double.TryParse(PiccFrench.Text.Replace('.', ','), out frenchSize))
-            {
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().frenchSize = frenchSize;
-                if (frenchSize == 0)
-                {
-                    PiccFrench.IsVisible = false;
-                }
-            }
-            else
-            {
-                DisplayAlert("Fehler", "Kein gültiger Wert bei French Grösse!\nBeispiel: 4.6", "OK");
-                return;
-
-            }
-
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertDate = InsertedDate.Date;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCountry = Country.SelectedIndex;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().piccSide = PiccSide.SelectedIndex;
-
-            if (Country.SelectedIndex == SWITZERLAND)
-            { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = InsertedPlaceCH.ToString(); }
-
-            else if (Country.SelectedIndex == ABROAD)
-            { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = InsertedPlaceAbroad.Text; }
-
-            ///enables all the labels, pickers and so on after saving the new information
-            enablePiccDetails(false);
-        }
 
         /// <summary>
         /// This method adds all possible options to the picker objects (countries, cities and bodyside)
         /// </summary>
         private void addAllOptions()
         {
-            Country.Items.Add(" ");
+            Country.Items.Add("");
             Country.Items.Add("Schweiz");
             Country.Items.Add("Ausland");
 
-            InsertedPlaceCH.Items.Add(" ");
+            InsertedPlaceCH.Items.Add("");
             InsertedPlaceCH.Items.Add("Inselspital Bern");
             InsertedPlaceCH.Items.Add("UniversitätsSpital Zürich");
             InsertedPlaceCH.Items.Add("Universitätsspital Basel");
             InsertedPlaceCH.Items.Add("Universitätsspital Genf");
             InsertedPlaceCH.Items.Add("Andere Einrichtung");
 
-            PiccSide.Items.Add(" ");
+            PiccSide.Items.Add("");
             PiccSide.Items.Add("Rechts");
             PiccSide.Items.Add("Links");
+
+
+            PiccPosition.Items.Add("");
+            PiccPosition.Items.Add("Oberhalb Ellbogen");
+            PiccPosition.Items.Add("Unterhalb Ellbogen");
 
         }
     }
 }
+
+///// <summary>
+///// This method saves all changes to the current picc object. 
+///// </summary>
+//private void savePiccChanges()
+//{
+//    // Checks if the entered french size is in double format. If not, a popup will inform the user.
+//    double frenchSize;
+//    if (double.TryParse(PiccFrench.Text.Replace('.', ','), out frenchSize))
+//    {
+//        CurrentAndOldPiccs.currentAndOldPiccs.Last().frenchSize = frenchSize;
+//        if (frenchSize == 0)
+//        {
+//            PiccFrench.IsVisible = false;
+//        }
+//    }
+//    else
+//    {
+//        DisplayAlert("Fehler", "Kein gültiger Wert bei French Grösse!\nBeispiel: 4.6", "OK");
+//        return;
+
+//    }
+
+//    CurrentAndOldPiccs.currentAndOldPiccs.Last().insertDate = InsertedDate.Date;
+//    CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCountry = Country.Items.ElementAtOrDefault(Country.SelectedIndex);
+//    CurrentAndOldPiccs.currentAndOldPiccs.Last().piccSide = PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex);
+
+//    if (Country.SelectedIndex == SWITZERLAND)
+//    { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = InsertedPlaceCH.Items.ElementAtOrDefault(InsertedPlaceCH.SelectedIndex); }
+
+//    else if (Country.SelectedIndex == ABROAD)
+//    { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = InsertedPlaceAbroad.Text; }
+
+//    else { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = ""; }
+
+//    ///disables all the labels, pickers and so on after saving the new information
+//    enablePiccDetails(false);
+//}

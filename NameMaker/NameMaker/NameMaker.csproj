@@ -38,7 +38,7 @@
     <Compile Include="App.cs" />
     <Compile Include="ModelViewController\CurrentPiccModelView.cs" />
     <Compile Include="Model\AllPiccModels.cs" />
-    <Compile Include="ModelViewController\CurrentAndOldPiccs.cs" />
+    <Compile Include="Model\CurrentAndOldPiccs.cs" />
     <Compile Include="Model\ImageElement.cs" />
     <Compile Include="Model\KnowledgeEntry.cs" />
     <Compile Include="Model\KnowledgeEntryElement.cs" />

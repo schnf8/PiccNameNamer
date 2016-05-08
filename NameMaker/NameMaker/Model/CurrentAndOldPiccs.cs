@@ -6,14 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NameMaker
+namespace NameMaker.Models
 {
     class CurrentAndOldPiccs
     {
 
-
+        /// <summary>
+        /// Static class that keeps all used piccs of the patient
+        /// </summary>
         public static List<Picc> currentAndOldPiccs = new List<Picc>();
-
+        
 
     }
 
