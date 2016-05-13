@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NameMaker.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,19 +10,19 @@ namespace NameMaker.Models
 {
     class AllPiccModels
     {
-        private static List<Picc> piccList;
+        private static List<PiccModel> piccList;
 
         private AllPiccModels() { }
 
-        public static List<Picc> getModels()
+        public static List<PiccModel> getModels()
         {
                         
             if (piccList == null)
             {
-                piccList = new List<Picc>();
-                piccList.Add(new Picc("Einlumiger Picc", 3.4, "EinlumigerPICC.PNG", "", DateTime.Today, "", "", "", ""));
-                piccList.Add(new Picc("Zweilumiger Picc", 3.9,"DoppellumigerPICC.PNG", "", DateTime.Today, "", "", "", ""));
-                piccList.Add(new Picc("Dreilumiger Picc", 4.4, null, "", DateTime.Today, "", "", "", ""));
+                piccList = new List<PiccModel>();
+                piccList.Add(new PiccModel("Einlumiger Picc", 3.4, "EinlumigerPICC.PNG", ""));
+                piccList.Add(new PiccModel("Zweilumiger Picc", 3.9,"DoppellumigerPICC.PNG", ""));
+                piccList.Add(new PiccModel("Dreilumiger Picc", 4.4, null, ""));
 
             }
             return piccList;

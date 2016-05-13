@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utilitys="clr-namespace:NameMaker.Utilitys"
              x:Class="NameMaker.Views.MyPICCPage"
              Title="Aktuelles PICC Model">
 
@@ -10,6 +11,13 @@
                 Android="20, 20, 20, 20"
                 WinPhone="20, 20, 20, 20" />
   </ContentPage.Padding>
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <utilitys:PICCInsertPositionToIndexConverter x:Key="PICCInsertPositionToIndexConverter" />
+      <utilitys:PICCInsertSideToIndexConverter x:Key="PICCInsertSideToIndexConverter" />
+      <utilitys:PICCInsertCountryToIndexConverter x:Key="PICCInsertCountryToIndexConverter" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
   <ContentPage.Content>
     <ScrollView>
       <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" >
@@ -21,22 +29,49 @@
           <DatePicker x:Name="InsertedDate" Date="{Binding InsertDate}">
             <DatePicker.Format>dd. MMMM yyyy</DatePicker.Format>
           </DatePicker>
-
+          
           <Label Text="Legeort:" HorizontalOptions="Fill" WidthRequest="80" />
-          <Picker x:Name="Country" SelectedIndex="{Binding InsertCountry}" SelectedIndexChanged="SideSelected"></Picker>
+          <Picker x:Name="Country" SelectedIndexChanged="SideSelected" SelectedIndex="{Binding InsertCountry, Converter={StaticResource PICCInsertCountryToIndexConverter}}">
+            <Picker.Items>
+              <x:String>Nicht definiert</x:String>
+              <x:String>Schweiz</x:String>
+              <x:String>Ausland</x:String>
+            </Picker.Items>
+          </Picker>
 
           <Picker x:Name="InsertedPlaceCH" IsVisible="False" SelectedIndex="{Binding CityCH}"/>
           <Entry x:Name="InsertedPlaceAbroad" Text="{Binding CityAbroad}" IsVisible="False"></Entry>
 
           <Label Text="Körperseite PICC" ></Label>
-          <Picker x:Name="PiccSide" SelectedIndex="{Binding PiccSide}"></Picker>
+          <Picker x:Name="PiccSide" SelectedIndex="{Binding PiccSide, Converter={StaticResource PICCInsertSideToIndexConverter}}">
+            <Picker.Items>
+              <x:String>Nicht definiert</x:String>
+              <x:String>Links</x:String>
+              <x:String>Rechts</x:String>
+            </Picker.Items>
+          </Picker>
 
           <Label Text="Position PICC" ></Label>
-          <Picker x:Name="PiccPosition" SelectedIndex="{Binding PiccPosition}"></Picker>
+          <Picker x:Name="PiccPosition" SelectedIndex="{Binding PiccPosition, Converter={StaticResource PICCInsertPositionToIndexConverter}}">
+             <Picker.Items>
+              <x:String>Nicht definiert</x:String>
+               <x:String>Unterhalb Ellbogen</x:String>
+              <x:String>Oberhalb Ellbogen</x:String>
+            </Picker.Items>
+          </Picker>
 
           <Label Text="Grösse in French" ></Label>
           <Entry x:Name="PiccFrench" Text="{Binding FrenchSize}"></Entry>
 
+          <StackLayout Orientation="Horizontal">
+          <Label x:Name="ExpirationLabel" Text="PICC inaktiv setzten:" HorizontalOptions="Fill"/>
+          <Switch x:Name="ExpirationSwitch" HorizontalOptions="Start" VerticalOptions="Start" IsToggled="{Binding IsExpirationDateSet}" Toggled="SwitchToggled"></Switch>
+          </StackLayout>
+          
+          <DatePicker x:Name="ExpirationDate" Date="{Binding RemovalDate}" IsVisible="False">
+            <DatePicker.Format>dd. MMMM yyyy</DatePicker.Format>
+          </DatePicker>
+         
         </StackLayout>
         <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
           <StackLayout x:Name="EditAndAddButtons" Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="True">
@@ -47,6 +82,7 @@
             <Button x:Name="SaveButton" Text="Speichern" Clicked="SaveButtonClicked"/>
             <Button x:Name="CancelButton" Text="Abbrechen" Clicked="CancelButtonClicked"/>
           </StackLayout>
+          <Button x:Name="AllPiccs" Text="Alle bisherigen Picc Modelle" Clicked="AllPiccsClicked"></Button>
         </StackLayout>
       </StackLayout>
     </ScrollView>

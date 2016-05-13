@@ -6,29 +6,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using static NameMaker.Models.Picc;
 
 namespace NameMaker.ModelViewController
 {
     class CurrentPiccModelView : INotifyPropertyChanged
     {
         private Picc picc;
-        private List<String> selectedPiccSide = new List<string>();
-        private List<String> selectedPiccPosition = new List<string>();
+      
+       
         private List<String> selectedPiccCountry = new List<string>();
         private List<String> selectedPiccCity = new List<string>();
 
 
         public CurrentPiccModelView(Picc picc)
         {
-            // Add all possible picker (piccside, piccposition, country, city CH) options to the lists
-            selectedPiccSide.Add("");
-            selectedPiccSide.Add("Rechts");
-            selectedPiccSide.Add("Links");
-
-            selectedPiccPosition.Add("");
-            selectedPiccPosition.Add("Oberhalb Ellbogen");
-            selectedPiccPosition.Add("Unterhalb Ellbogen");
-
             selectedPiccCity.Add("");
             selectedPiccCity.Add("Inselspital Bern");
             selectedPiccCity.Add("UniversitätsSpital Zürich");
@@ -62,12 +54,12 @@ namespace NameMaker.ModelViewController
         /// </summary>
         public string PiccName
         {
-            get { return picc.piccName; }
+            get { return picc.PiccModel.PiccName; }
             set
             {
-                if (picc.piccName != value)
+                if (picc.PiccModel.PiccName != value)
                 {
-                    picc.piccName = value;
+                    picc.PiccModel.PiccName = value;
                     OnPropertyChanged("PiccName");
                 }
             }
@@ -78,12 +70,12 @@ namespace NameMaker.ModelViewController
         /// </summary>
         public string ImageSource
         {
-            get { return picc.uri; }
+            get { return picc.PiccModel.PictureUri; }
             set
             {
-                if (picc.uri != value)
+                if (picc.PiccModel.PictureUri != value)
                 {
-                    picc.uri = value;
+                    picc.PiccModel.PictureUri = value;
                     OnPropertyChanged("ImageSource");
                 }
             }
@@ -94,12 +86,12 @@ namespace NameMaker.ModelViewController
         /// </summary>
         public double FrenchSize
         {
-            get { return picc.frenchSize; }
+            get { return picc.PiccModel.FrenchSize; }
             set
             {
-                if (picc.frenchSize != value)
+                if (picc.PiccModel.FrenchSize != value)
                 {
-                    picc.frenchSize = value;
+                    picc.PiccModel.FrenchSize = value;
                     OnPropertyChanged("FrenchSize");
                 }
             }
@@ -110,13 +102,42 @@ namespace NameMaker.ModelViewController
         /// </summary>
         public DateTime InsertDate
         {
-            get { return picc.insertDate; }
+            get { return picc.InsertDate; }
             set
             {
-                if (picc.insertDate != value)
+                if (picc.InsertDate != value)
                 {
-                    picc.insertDate = value;
+                    picc.InsertDate = value;
                     OnPropertyChanged("InsertDate");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the binded expiration date or sets a new date to the related object
+        /// </summary>
+        public DateTime? RemovalDate
+        {
+            get { return picc.RemovalDate; }
+            set
+            {
+                if (picc.RemovalDate != value)
+                {
+                    picc.RemovalDate = value;
+                    OnPropertyChanged("RemovalDate");
+                }
+            }
+        }
+
+        public bool IsExpirationDateSet
+        {
+            get { return picc.IsExpirationDateSet; }
+            set
+            {
+                if (picc.IsExpirationDateSet != value)
+                {
+                    picc.IsExpirationDateSet = value;
+                    OnPropertyChanged("IsExpirationDateSet");
                 }
             }
         }
@@ -124,29 +145,18 @@ namespace NameMaker.ModelViewController
         /// <summary>
         /// Returns the binded picc position or sets a new picc position to the related object
         /// </summary>
-        public int PiccPosition
+        public PICCInsertPosition PiccPosition
         {
             get
             {
-                int index = 0;
-                foreach (string a in selectedPiccPosition)
-                {
-
-                    if (a == picc.piccPosition)
-                    {
-                        return index;
-                    }
-                    index++;
-
-                }
-                return 0;
+                return picc.InsertPosition; 
             }
 
             set
             {
-                if (picc.piccPosition != selectedPiccPosition.ElementAt(value))
+                if (picc.InsertPosition != value)
                 {
-                    picc.piccPosition = selectedPiccPosition.ElementAt(value);
+                    picc.InsertPosition = value;
                     OnPropertyChanged("PiccPosition");
                 }
             }
@@ -155,29 +165,18 @@ namespace NameMaker.ModelViewController
         /// <summary>
         /// Returns the binded picc side or sets a new picc side to the related object
         /// </summary>
-        public int PiccSide
+        public PICCInsertSide PiccSide
         {
             get
             {
-                int index = 0;
-                foreach (string a in selectedPiccSide)
-                {
-
-                    if (a == picc.piccSide)
-                    {
-                        return index;
-                    }
-                    index++;
-
-                }
-                return 0;
+                return picc.InsertSide;
             }
 
             set
             {
-                if (picc.piccSide != selectedPiccSide.ElementAt(value))
+                if (picc.InsertSide != value)
                 {
-                    picc.piccSide = selectedPiccSide.ElementAt(value);
+                    picc.InsertSide = value;
                     OnPropertyChanged("PiccSide");
                 }
             }
@@ -186,29 +185,20 @@ namespace NameMaker.ModelViewController
         /// <summary>
         /// Returns the binded country or sets a new country to the related object
         /// </summary>
-        public int InsertCountry
+        public PICCInsertCountry InsertCountry
         {
             get
             {
-                int index = 0;
-                foreach (string a in selectedPiccCountry)
-                {
-                    if (a == picc.insertCountry)
-                    {
-                        return index;
-                    }
-
-                    index++;
-                }
-                return 0;
+                return picc.InsertCountry;
             }
 
             set
             {
-                if (picc.insertCountry != selectedPiccCountry.ElementAt(value))
-
-                    picc.insertCountry = selectedPiccCountry.ElementAt(value);
-                OnPropertyChanged("InsertCountry");
+                if (picc.InsertCountry != value)
+                {
+                    picc.InsertCountry = value;
+                    OnPropertyChanged("InsertCountry");
+                }
             }
 
         }
@@ -223,7 +213,7 @@ namespace NameMaker.ModelViewController
                 int index = 0;
                 foreach (string a in selectedPiccCity)
                 {
-                    if (a == picc.insertCity)
+                    if (a == picc.InsertCity)
                     {
                         return index;
                     }
@@ -234,9 +224,9 @@ namespace NameMaker.ModelViewController
             }
             set
             {
-                if (picc.insertCity != selectedPiccCity.ElementAt(value) && (picc.insertCountry == "Schweiz") && (selectedPiccCity.Contains(selectedPiccCity.ElementAt(value))))
+                if (picc.InsertCity != selectedPiccCity.ElementAt(value) && (picc.InsertCountry == PICCInsertCountry.Switzerland) && (selectedPiccCity.Contains(selectedPiccCity.ElementAt(value))))
                 {
-                    picc.insertCity = selectedPiccCity.ElementAt(value);
+                    picc.InsertCity = selectedPiccCity.ElementAt(value);
                     OnPropertyChanged("CityCH");
                 }
 
@@ -251,18 +241,18 @@ namespace NameMaker.ModelViewController
         {
             get
             {
-                if (picc.insertCountry == "Ausland")
+                if (picc.InsertCountry == PICCInsertCountry.Abroad)
                 {
-                    return picc.insertCity;
+                    return picc.InsertCity;
                 }
                 return "";
             }
 
             set
             {
-                if (picc.insertCity != value && !(selectedPiccCity.Contains(value)) && picc.insertCountry == "Ausland")
+                if (picc.InsertCity != value && !(selectedPiccCity.Contains(value)) && picc.InsertCountry == PICCInsertCountry.Abroad)
                 {
-                    picc.insertCity = value;
+                    picc.InsertCity = value;
                     OnPropertyChanged("CityAbroad");
                 }
             }

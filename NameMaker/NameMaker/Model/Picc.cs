@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NameMaker.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,27 +10,48 @@ namespace NameMaker.Models
 {
     class Picc
     {
-        public string piccName { get; set; }
-        public double frenchSize { get; set; }
-        public string uri { get; set; }
-        public string barcode { get; set; }
-        public DateTime insertDate { get; set; }
-        public string insertCountry { get; set; }
-        public string insertCity { get; set; }
-        public string piccSide { get; set; }
-        public string piccPosition { get; set; }
-
-        public Picc(string piccName, double frenchSize, string uri, string barcode, DateTime insertDate, string insertCountry, string insertCity, string piccSide, string piccPosition)
+        public enum PICCInsertPosition
         {
-            this.piccName = piccName;
-            this.frenchSize = frenchSize;
-            this.uri = uri;
-            this.barcode = barcode;
-            this.insertDate = insertDate;
-            this.insertCity = insertCity;
-            this.insertCountry = insertCountry;
-            this.piccSide = piccSide;
-            this.piccPosition = piccPosition;
+            Undefined,
+            BelowElbow,
+            AboveElbow
+        }
+
+        public enum PICCInsertSide
+        {
+            Undefined,
+            Left,
+            Right
+        }
+
+        public enum PICCInsertCountry        {
+            Undefined,
+            Switzerland,
+            Abroad
+        }
+
+        public PiccModel PiccModel { get; set; }
+        public DateTime InsertDate { get; set; }
+        public DateTime? RemovalDate { get; set; }
+        public bool IsExpirationDateSet { get; set; }
+        public PICCInsertCountry InsertCountry { get; set; }
+        public string InsertCity { get; set; }
+        public PICCInsertSide InsertSide { get; set; }
+        public PICCInsertPosition InsertPosition { get; set; }
+
+        public Picc(PiccModel model, DateTime insertDate, PICCInsertCountry insertCountry, string insertCity, PICCInsertSide piccSide, PICCInsertPosition piccPosition)
+
+        {
+            this.PiccModel = model;
+            this.InsertDate = insertDate;
+            this.InsertCity = insertCity;
+            this.InsertCountry = insertCountry;
+            this.InsertSide = piccSide;
+            this.InsertPosition = piccPosition;
+                     
+
+            this.RemovalDate = DateTime.Today.AddMonths(3);
+            
         }
     }
 }

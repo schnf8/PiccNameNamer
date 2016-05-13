@@ -44,12 +44,17 @@
     <Compile Include="Model\KnowledgeEntryElement.cs" />
     <Compile Include="Model\KnowledgePageEntries.cs" />
     <Compile Include="Model\Picc.cs" />
+    <Compile Include="Model\PiccModel.cs" />
     <Compile Include="Model\TextElement.cs" />
     <Compile Include="Views\BarCodeScannerPage.xaml.cs">
       <DependentUpon>BarCodeScannerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\GlossaryEntries.cs" />
     <Compile Include="Model\GlossaryEntry.cs" />
+    <Compile Include="Views\AllPiccPage.xaml.cs">
+      <DependentUpon>AllPiccPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utilitys\Converters.cs" />
     <Compile Include="Views\GlossaryPage.xaml.cs">
       <DependentUpon>GlossaryPage.xaml</DependentUpon>
     </Compile>
@@ -159,6 +164,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\SearchAPiccPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\AllPiccPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

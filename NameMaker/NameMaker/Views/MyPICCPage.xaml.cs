@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using static NameMaker.Models.Picc;
 
 namespace NameMaker.Views
 {
@@ -31,7 +32,7 @@ namespace NameMaker.Views
         public MyPICCPage()
         {
             loadMyPiccPage();
-                       
+
         }
 
         /// <summary>
@@ -42,14 +43,15 @@ namespace NameMaker.Views
             InitializeComponent();
             addAllOptions();
 
-            //Checks if a current picc is saved and bind the information to the page
-            if (CurrentAndOldPiccs.currentAndOldPiccs.Count() != 0)
+            //Checks if a current picc is saved and bind the information to the page. If the piccs expirationdate is not set, the information will be added to the page. If the expiration date is set, but does not lie in the past, the information will also be added.
+            if (CurrentAndOldPiccs.currentAndOldPiccs.Count() != 0 && (!CurrentAndOldPiccs.currentAndOldPiccs.Last().IsExpirationDateSet ||
+                (CurrentAndOldPiccs.currentAndOldPiccs.Last().IsExpirationDateSet && CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate >= DateTime.Today)))
             {
                 //If not set, copy the current datas of the picc object. The current picc object will be needed if the cancel buttons has been clicked.
                 if (currentPicc == null)
                 {
-                    currentPicc = new Picc(CurrentAndOldPiccs.currentAndOldPiccs.Last().piccName, CurrentAndOldPiccs.currentAndOldPiccs.Last().frenchSize, CurrentAndOldPiccs.currentAndOldPiccs.Last().uri, CurrentAndOldPiccs.currentAndOldPiccs.Last().barcode, CurrentAndOldPiccs.currentAndOldPiccs.Last().insertDate,
-                   CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCountry, CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity, CurrentAndOldPiccs.currentAndOldPiccs.Last().piccSide, CurrentAndOldPiccs.currentAndOldPiccs.Last().piccPosition);
+                    currentPicc = new Picc(CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate,
+                   CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition);
 
                 }
 
@@ -59,6 +61,7 @@ namespace NameMaker.Views
                 //make the information panel visible and the edit button visible
                 PiccInformation.IsVisible = true;
                 EditButton.IsVisible = true;
+                AllPiccs.IsVisible = true;
             }
 
             enablePiccDetails(false);
@@ -114,6 +117,12 @@ namespace NameMaker.Views
             }
         }
 
+        void AllPiccsClicked(object o, EventArgs e)
+        {
+            Navigation.PushAsync(new AllPiccPage());
+        }
+
+
         void SaveButtonClicked(object o, EventArgs e)
         {
             currentPicc = null;
@@ -123,11 +132,13 @@ namespace NameMaker.Views
         void CancelButtonClicked(object o, EventArgs e)
         {
             //Sets all the values back to the previous values
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertDate = currentPicc.insertDate;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().frenchSize = currentPicc.frenchSize;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = currentPicc.insertCity;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCountry = currentPicc.insertCountry;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().piccSide = currentPicc.piccSide;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate = currentPicc.InsertDate;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel.FrenchSize = currentPicc.PiccModel.FrenchSize;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity = currentPicc.InsertCity;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry = currentPicc.InsertCountry;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide = currentPicc.InsertSide;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition = currentPicc.InsertPosition;
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate = currentPicc.RemovalDate;
 
             loadMyPiccPage();
         }
@@ -148,8 +159,6 @@ namespace NameMaker.Views
         /// <param name="yesOrNo"></param>
         private void enablePiccDetails(bool yesOrNo)
         {
-
-            PiccName.IsEnabled = yesOrNo;
             InsertedDate.IsEnabled = yesOrNo;
             InsertedPlaceAbroad.IsEnabled = yesOrNo;
             InsertedPlaceCH.IsEnabled = yesOrNo;
@@ -157,6 +166,8 @@ namespace NameMaker.Views
             PiccPosition.IsEnabled = yesOrNo;
             PiccFrench.IsEnabled = yesOrNo;
             Country.IsEnabled = yesOrNo;
+            ExpirationDate.IsEnabled = yesOrNo;
+            ExpirationSwitch.IsEnabled = yesOrNo;
 
             //Changes the visibility to either save/cancel buttons or edit/addAPicc buttons
             SaveAndCancelButtons.IsVisible = yesOrNo;
@@ -183,18 +194,13 @@ namespace NameMaker.Views
 
                 InsertedPlaceAbroad.IsVisible = true;
             }
-
         }
-
 
         /// <summary>
         /// This method adds all possible options to the picker objects (countries, cities and bodyside)
         /// </summary>
         private void addAllOptions()
         {
-            Country.Items.Add("");
-            Country.Items.Add("Schweiz");
-            Country.Items.Add("Ausland");
 
             InsertedPlaceCH.Items.Add("");
             InsertedPlaceCH.Items.Add("Inselspital Bern");
@@ -202,19 +208,38 @@ namespace NameMaker.Views
             InsertedPlaceCH.Items.Add("Universitätsspital Basel");
             InsertedPlaceCH.Items.Add("Universitätsspital Genf");
             InsertedPlaceCH.Items.Add("Andere Einrichtung");
+            
+        }
 
-            PiccSide.Items.Add("");
-            PiccSide.Items.Add("Rechts");
-            PiccSide.Items.Add("Links");
+        public async void SwitchToggled(object o, EventArgs e)
+        {
+            if (ExpirationSwitch.IsToggled && !currentPicc.IsExpirationDateSet)
+            {
+                bool expiartion = await DisplayAlert("Warnung", "PICC wird bei Inaktivsetzung nicht mehr in aktueller Ansicht angezeigt, sobald das Inaktivdatum überschritten wird!", "Weiterfahren", "Abbrechen");
+                if (expiartion == false)
+                {
+                    ExpirationSwitch.IsToggled = false;
+                    return;
 
-
-            PiccPosition.Items.Add("");
-            PiccPosition.Items.Add("Oberhalb Ellbogen");
-            PiccPosition.Items.Add("Unterhalb Ellbogen");
+                }
+                else
+                {
+                    ExpirationDate.IsVisible = true;
+                    return;
+                }
+                
+            } else if(ExpirationSwitch.IsToggled && currentPicc.IsExpirationDateSet)
+            {
+                ExpirationDate.IsVisible = false;
+                return;
+            }
+            else { ExpirationDate.IsVisible = false; }   
 
         }
     }
 }
+
+
 
 ///// <summary>
 ///// This method saves all changes to the current picc object. 

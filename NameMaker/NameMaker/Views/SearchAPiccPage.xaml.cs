@@ -1,13 +1,16 @@
-﻿using NameMaker.Models;
+﻿using NameMaker.Model;
+using NameMaker.Models;
 using NameMaker.ModelViewController;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using static NameMaker.Models.Picc;
 
 namespace NameMaker.Views
 {
@@ -30,7 +33,7 @@ namespace NameMaker.Views
         /// <summary>
         /// Loads all the available picc models, so that they can be found either by an userinput or a barcode scan.
         /// </summary>
-        List<Picc> piccList = AllPiccModels.getModels();
+        List<PiccModel> piccList = AllPiccModels.getModels();
 
         public SearchAPiccPage()
         {
@@ -78,12 +81,12 @@ namespace NameMaker.Views
         {
             string searchName = PiccEntry.Text;
 
-            foreach (Picc piccModel in piccList)
+            foreach (PiccModel piccModel in piccList)
             {
                 // if either the picc name or the barcode could be found in the database
-                if ((string.Compare(piccModel.piccName, searchName, StringComparison.OrdinalIgnoreCase) == 0))
+                if ((string.Compare(piccModel.PiccName, searchName, StringComparison.OrdinalIgnoreCase) == 0))
                 {
-                    currentPicc = piccModel;
+                    currentPicc = new Picc(new PiccModel(piccModel.PiccName, piccModel.FrenchSize, piccModel.PictureUri, piccModel.Barcode), DateTime.Today, PICCInsertCountry.Undefined, "", PICCInsertSide.Undefined, PICCInsertPosition.Undefined);
                     BindingContext = new CurrentPiccModelView(currentPicc);
 
                     //enables the view to add more information for selected picc
@@ -103,7 +106,7 @@ namespace NameMaker.Views
                 if (searchName == "e")
                 {
                     //Adds the model to the local currentPicc object
-                    currentPicc = piccModel;
+                    currentPicc = new Picc(new PiccModel(piccModel.PiccName, piccModel.FrenchSize, piccModel.PictureUri, piccModel.Barcode), DateTime.Today, PICCInsertCountry.Undefined, "", PICCInsertSide.Undefined, PICCInsertPosition.Undefined);
                     this.BindingContext = new CurrentPiccModelView(currentPicc);
 
                     //enables the view to add more information for selected picc
@@ -155,10 +158,6 @@ namespace NameMaker.Views
         //Add all options to the picker objects (countries, cities and bodyside)
         private void addAllOptions()
         {
-            Country.Items.Add("");
-            Country.Items.Add("Schweiz");
-            Country.Items.Add("Ausland");
-
             InsertedPlaceCH.Items.Add("");
             InsertedPlaceCH.Items.Add("Inselspital Bern");
             InsertedPlaceCH.Items.Add("UniversitätsSpital Zürich");
@@ -166,13 +165,6 @@ namespace NameMaker.Views
             InsertedPlaceCH.Items.Add("Universitätsspital Genf");
             InsertedPlaceCH.Items.Add("Andere Einrichtung");
 
-            PiccSide.Items.Add("");
-            PiccSide.Items.Add("Rechts");
-            PiccSide.Items.Add("Links");
-
-            PiccPosition.Items.Add("");
-            PiccPosition.Items.Add("Oberhalb Ellbogen");
-            PiccPosition.Items.Add("Unterhalb Ellbogen");
 
         }
 
@@ -181,8 +173,10 @@ namespace NameMaker.Views
         {
             //Checks if the entered double value for the french size is in a correct format
             double frenchSize = 0;
+            string frenchString = PiccFrench.Text.Replace(',', '.');
+            bool success = double.TryParse(frenchString, NumberStyles.Number, CultureInfo.InvariantCulture, out frenchSize);
 
-            if (PiccFrench.Text != null && (!double.TryParse(PiccFrench.Text.Replace('.', ','), out frenchSize)))
+            if (PiccFrench.Text != null && !success)
             {
                 DisplayAlert("Fehler", "Kein gültiger Wert bei French Grösse!\nBeispiel: 4.6", "OK");
                 return;
@@ -191,16 +185,16 @@ namespace NameMaker.Views
             /// Checks if either "Schweiz", "Ausland" or nothing is selected as country. According to the choice, the picc object will be generated in a different way.
             if (Country.SelectedIndex == SWITZERLAND)
             {
-                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.uri, currentPicc.barcode, InsertedDate.Date, Country.Items.ElementAtOrDefault(Country.SelectedIndex), InsertedPlaceCH.Items.ElementAtOrDefault(InsertedPlaceCH.SelectedIndex), PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex), PiccPosition.Items.ElementAtOrDefault(PiccPosition.SelectedIndex));
+                currentPicc = new Picc(currentPicc.PiccModel, InsertedDate.Date, currentPicc.InsertCountry, InsertedPlaceCH.Items.ElementAtOrDefault(InsertedPlaceCH.SelectedIndex), currentPicc.InsertSide, currentPicc.InsertPosition);
             }
 
             else if (Country.SelectedIndex == ABROAD)
             {
-                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.uri, currentPicc.barcode, InsertedDate.Date, Country.Items.ElementAtOrDefault(Country.SelectedIndex), InsertedPlaceAbroad.Text, PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex), PiccPosition.Items.ElementAtOrDefault(PiccPosition.SelectedIndex));
+                currentPicc = new Picc(currentPicc.PiccModel, InsertedDate.Date, currentPicc.InsertCountry, InsertedPlaceAbroad.Text, currentPicc.InsertSide, currentPicc.InsertPosition);
             }
             else
             {
-                currentPicc = new Picc(PiccName.Text, frenchSize, currentPicc.uri, currentPicc.barcode, InsertedDate.Date, Country.Items.ElementAtOrDefault(Country.SelectedIndex), "", PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex), PiccPosition.Items.ElementAtOrDefault(PiccPosition.SelectedIndex));
+                currentPicc = new Picc(currentPicc.PiccModel, InsertedDate.Date, currentPicc.InsertCountry, "", currentPicc.InsertSide, currentPicc.InsertPosition);
             }
 
             // Saves the currentPicc object in the list and moves back to the MyPiccPage.
