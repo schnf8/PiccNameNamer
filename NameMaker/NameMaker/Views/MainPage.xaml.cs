@@ -31,11 +31,6 @@ namespace NameMaker
             Navigation.PushAsync(new MyPICCPage());
         }
 
-        void ScanPageButtonClick(object sender, EventArgs e)
-        {
-            Navigation.PushAsync(new BarCodeScannerPage());
-        }
-
         void InformationOverviewButtonClick(object sender, EventArgs e)
         {
             Navigation.PushAsync(new InformationOverviewPage());

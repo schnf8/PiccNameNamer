@@ -27,9 +27,9 @@
 
           <Label Text="Legedatum:" HorizontalOptions="Fill" WidthRequest="80" />
           <DatePicker x:Name="InsertedDate" Date="{Binding InsertDate}">
-            <DatePicker.Format>dd. MMMM yyyy</DatePicker.Format>
+            <DatePicker.Format>d</DatePicker.Format>
           </DatePicker>
-          
+
           <Label Text="Legeort:" HorizontalOptions="Fill" WidthRequest="80" />
           <Picker x:Name="Country" SelectedIndexChanged="SideSelected" SelectedIndex="{Binding InsertCountry, Converter={StaticResource PICCInsertCountryToIndexConverter}}">
             <Picker.Items>
@@ -39,8 +39,7 @@
             </Picker.Items>
           </Picker>
 
-          <Picker x:Name="InsertedPlaceCH" IsVisible="False" SelectedIndex="{Binding CityCH}"/>
-          <Entry x:Name="InsertedPlaceAbroad" Text="{Binding CityAbroad}" IsVisible="False"></Entry>
+          <Entry x:Name="InsertCity" Text="{Binding City}" Placeholder="Bitte Institution eingeben" IsVisible="False"></Entry>
 
           <Label Text="Körperseite PICC" ></Label>
           <Picker x:Name="PiccSide" SelectedIndex="{Binding PiccSide, Converter={StaticResource PICCInsertSideToIndexConverter}}">
@@ -53,9 +52,9 @@
 
           <Label Text="Position PICC" ></Label>
           <Picker x:Name="PiccPosition" SelectedIndex="{Binding PiccPosition, Converter={StaticResource PICCInsertPositionToIndexConverter}}">
-             <Picker.Items>
+            <Picker.Items>
               <x:String>Nicht definiert</x:String>
-               <x:String>Unterhalb Ellbogen</x:String>
+              <x:String>Unterhalb Ellbogen</x:String>
               <x:String>Oberhalb Ellbogen</x:String>
             </Picker.Items>
           </Picker>
@@ -63,15 +62,13 @@
           <Label Text="Grösse in French" ></Label>
           <Entry x:Name="PiccFrench" Text="{Binding FrenchSize}"></Entry>
 
-          <StackLayout Orientation="Horizontal">
-          <Label x:Name="ExpirationLabel" Text="PICC inaktiv setzten:" HorizontalOptions="Fill"/>
-          <Switch x:Name="ExpirationSwitch" HorizontalOptions="Start" VerticalOptions="Start" IsToggled="{Binding IsExpirationDateSet}" Toggled="SwitchToggled"></Switch>
+          <StackLayout x:Name="RemovalLayout" Orientation="Vertical">
+            <Button x:Name="PiccRemoveButton" Text="PICC inaktiv setzten" Clicked="PiccRemoveButtonClicked"/>
+            <DatePicker x:Name="RemovalDate" Date="{Binding RemovalDate}" IsVisible="False">
+              <DatePicker.Format>d</DatePicker.Format>
+            </DatePicker>
           </StackLayout>
-          
-          <DatePicker x:Name="ExpirationDate" Date="{Binding RemovalDate}" IsVisible="False">
-            <DatePicker.Format>dd. MMMM yyyy</DatePicker.Format>
-          </DatePicker>
-         
+
         </StackLayout>
         <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
           <StackLayout x:Name="EditAndAddButtons" Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="True">

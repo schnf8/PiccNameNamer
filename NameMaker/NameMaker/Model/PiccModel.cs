@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NameMaker.Model
 {
-    class PiccModel
+    public class PiccModel
     {
         public string PiccName { get; set; }
         public double FrenchSize { get; set; }

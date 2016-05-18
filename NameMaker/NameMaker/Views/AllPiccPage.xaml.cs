@@ -17,17 +17,8 @@ namespace NameMaker
         public AllPiccPage()
         {
             InitializeComponent();
-
-            if (CurrentAndOldPiccs.currentAndOldPiccs.FirstOrDefault() == null)
-            {
-                DisplayAlert("Information", "Kein PICC Model gefunden", "Zurück");
-                return;
-            }
-            else
-            {
-                //Adds all piccs to the ListView 
-                PiccList.ItemsSource = CurrentAndOldPiccs.currentAndOldPiccs;
-            }
+            //Adds all piccs to the ListView 
+            PiccList.ItemsSource = CurrentAndOldPiccs.currentAndOldPiccs;
         }
 
         public async void selectedPicc(object o, EventArgs e)
@@ -36,12 +27,18 @@ namespace NameMaker
             {
                 Picc selectedPicc = (Picc)PiccList.SelectedItem;
 
-                await DisplayAlert(selectedPicc.PiccModel.PiccName, (selectedPicc.InsertDate + "\n" + selectedPicc.InsertCountry), "Abbrechen");
+                await DisplayAlert(selectedPicc.PiccModel.PiccName, "Legedatum: " + selectedPicc.InsertDate.ToString("d") + "\nEntfernungsdatum: " + selectedPicc.RemovalDate.ToString("d"), "Abbrechen");
 
                 PiccList.SelectedItem = null;
 
             }
 
+        }
+
+        private string allInformation()
+        {
+            string allInformationString = "";
+            return allInformationString;
         }
 
 

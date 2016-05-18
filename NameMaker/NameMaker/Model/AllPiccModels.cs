@@ -21,7 +21,7 @@ namespace NameMaker.Models
             {
                 piccList = new List<PiccModel>();
                 piccList.Add(new PiccModel("Einlumiger Picc", 3.4, "EinlumigerPICC.PNG", ""));
-                piccList.Add(new PiccModel("Zweilumiger Picc", 3.9,"DoppellumigerPICC.PNG", ""));
+                piccList.Add(new PiccModel("Zweilumiger Picc", 3.9,"DoppellumigerPICC.PNG", "7680561570025"));
                 piccList.Add(new PiccModel("Dreilumiger Picc", 4.4, null, ""));
 
             }

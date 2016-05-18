@@ -116,7 +116,7 @@ namespace NameMaker.ModelViewController
         /// <summary>
         /// Returns the binded expiration date or sets a new date to the related object
         /// </summary>
-        public DateTime? RemovalDate
+        public DateTime RemovalDate
         {
             get { return picc.RemovalDate; }
             set
@@ -129,15 +129,15 @@ namespace NameMaker.ModelViewController
             }
         }
 
-        public bool IsExpirationDateSet
+        public bool IsRemovalDateSet
         {
-            get { return picc.IsExpirationDateSet; }
+            get { return picc.IsNotActiveAnymore; }
             set
             {
-                if (picc.IsExpirationDateSet != value)
+                if (picc.IsNotActiveAnymore != value)
                 {
-                    picc.IsExpirationDateSet = value;
-                    OnPropertyChanged("IsExpirationDateSet");
+                    picc.IsNotActiveAnymore = value;
+                    OnPropertyChanged("IsRemovalDateSet");
                 }
             }
         }
@@ -203,45 +203,14 @@ namespace NameMaker.ModelViewController
 
         }
 
-        // <summary>
-        // Returns the binded city if "Schweiz" is selected as country.Sets a new city to the related object if "Schweiz is selected as country
-        // </summary>
-        public int CityCH
-        {
-            get
-            {
-                int index = 0;
-                foreach (string a in selectedPiccCity)
-                {
-                    if (a == picc.InsertCity)
-                    {
-                        return index;
-                    }
-
-                    index++;
-                }
-                return 0;
-            }
-            set
-            {
-                if (picc.InsertCity != selectedPiccCity.ElementAt(value) && (picc.InsertCountry == PICCInsertCountry.Switzerland) && (selectedPiccCity.Contains(selectedPiccCity.ElementAt(value))))
-                {
-                    picc.InsertCity = selectedPiccCity.ElementAt(value);
-                    OnPropertyChanged("CityCH");
-                }
-
-            }
-        }
-
-
         /// <summary>
-        /// Returns the binded city if "Ausland" is selected as country. Sets a new city to the related object if "Ausland" is selected as country
+        /// Returns the binded city if "Ausland" or "Switzerland" is selected as country. Sets a new city to the related object.
         /// </summary>
-        public string CityAbroad
+        public string City
         {
             get
             {
-                if (picc.InsertCountry == PICCInsertCountry.Abroad)
+                if (picc.InsertCountry != PICCInsertCountry.Undefined)
                 {
                     return picc.InsertCity;
                 }
@@ -250,13 +219,68 @@ namespace NameMaker.ModelViewController
 
             set
             {
-                if (picc.InsertCity != value && !(selectedPiccCity.Contains(value)) && picc.InsertCountry == PICCInsertCountry.Abroad)
+                if (picc.InsertCity != value && picc.InsertCountry == PICCInsertCountry.Undefined)
                 {
                     picc.InsertCity = value;
-                    OnPropertyChanged("CityAbroad");
+                    OnPropertyChanged("City");
                 }
             }
         }
+
+        //// <summary>
+        //// Returns the binded city if "Schweiz" is selected as country.Sets a new city to the related object if "Schweiz is selected as country
+        //// </summary>
+        //public int CityCH
+        //{
+        //    get
+        //    {
+        //        int index = 0;
+        //        foreach (string a in selectedPiccCity)
+        //        {
+        //            if (a == picc.InsertCity)
+        //            {
+        //                return index;
+        //            }
+
+        //            index++;
+        //        }
+        //        return 0;
+        //    }
+        //    set
+        //    {
+        //        if (picc.InsertCity != selectedPiccCity.ElementAt(value) && (picc.InsertCountry == PICCInsertCountry.Switzerland) && (selectedPiccCity.Contains(selectedPiccCity.ElementAt(value))))
+        //        {
+        //            picc.InsertCity = selectedPiccCity.ElementAt(value);
+        //            OnPropertyChanged("CityCH");
+        //        }
+
+        //    }
+        //}
+
+
+        ///// <summary>
+        ///// Returns the binded city if "Ausland" is selected as country. Sets a new city to the related object if "Ausland" is selected as country
+        ///// </summary>
+        //public string CityAbroad
+        //{
+        //    get
+        //    {
+        //        if (picc.InsertCountry == PICCInsertCountry.Abroad)
+        //        {
+        //            return picc.InsertCity;
+        //        }
+        //        return "";
+        //    }
+
+        //    set
+        //    {
+        //        if (picc.InsertCity != value && !(selectedPiccCity.Contains(value)) && picc.InsertCountry == PICCInsertCountry.Abroad)
+        //        {
+        //            picc.InsertCity = value;
+        //            OnPropertyChanged("CityAbroad");
+        //        }
+        //    }
+        //}
     }
 }
 

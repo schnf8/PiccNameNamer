@@ -1,23 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:utilitys="clr-namespace:NameMaker.Utilitys"
              x:Class="NameMaker.Views.SearchAPiccPage"
              Title="PICC Modell suchen">
-
   <ContentPage.Padding>
     <OnPlatform x:TypeArguments="Thickness"
                 iOS="20, 40, 20, 20"
                 Android="20, 20, 20, 20"
                 WinPhone="20, 20, 20, 20" />
-  </ContentPage.Padding>
-  <ContentPage.Resources>
-    <ResourceDictionary>
-      <utilitys:PICCInsertPositionToIndexConverter x:Key="PICCInsertPositionToIndexConverter" />
-      <utilitys:PICCInsertSideToIndexConverter x:Key="PICCInsertSideToIndexConverter" />
-      <utilitys:PICCInsertCountryToIndexConverter x:Key="PICCInsertCountryToIndexConverter" />
-    </ResourceDictionary>
-  </ContentPage.Resources>
+  </ContentPage.Padding>  
   <ContentPage.Content>
     <ScrollView>
       <Grid>
@@ -30,55 +21,8 @@
             <Entry x:Name="PiccEntry" Placeholder="Bitte PICC Name eingeben"/>
             <Button x:Name="PiccSearchButton" Text="Suchen" Clicked="PiccSearchButtonClicked"></Button>
           </StackLayout>
-          <Button Text="Barcode scannen"></Button>
-        </StackLayout>
-        <StackLayout x:Name="PiccInformation" Orientation="Vertical" Grid.Row="1" IsVisible="False">
-          <Label x:Name="PiccName" Text="{Binding PiccName, Mode=OneWay}"></Label>
-          <Image x:Name="PiccImage" Source="{Binding ImageSource}" Aspect="AspectFit" HeightRequest="200" WidthRequest="100"/>
-
-          <Label Text="Legedatum:" HorizontalOptions="Fill" WidthRequest="80" />
-          <DatePicker x:Name="InsertedDate" Date="{Binding InsertDate, Mode=OneWay}">
-            <DatePicker.Format>dd. MMMM yyyy</DatePicker.Format>
-          </DatePicker>
-          <Label Text="Legeort:" HorizontalOptions="Fill" WidthRequest="80" />
-
-          <Picker x:Name="Country" SelectedIndexChanged="SideSelected" SelectedIndex="{Binding InsertCountry, Converter={StaticResource PICCInsertCountryToIndexConverter}}">
-            <Picker.Items>
-              <x:String>Nicht definiert</x:String>
-              <x:String>Schweiz</x:String>
-              <x:String>Ausland</x:String>
-            </Picker.Items>
-          </Picker>
-
-          <Picker x:Name="InsertedPlaceCH" IsVisible="False"/>
-          <Entry x:Name="InsertedPlaceAbroad" IsVisible="False"></Entry>
-
-          <Label Text="Körperseite PICC" ></Label>
-          <Picker x:Name="PiccSide" SelectedIndex="{Binding PiccSide, Converter={StaticResource PICCInsertSideToIndexConverter}}">
-            <Picker.Items>
-              <x:String>Nicht definiert</x:String>
-              <x:String>Links</x:String>
-              <x:String>Rechts</x:String>
-            </Picker.Items>
-          </Picker>
-
-          <Label Text="Position PICC" ></Label>
-          <Picker x:Name="PiccPosition" SelectedIndex="{Binding PiccPosition, Converter={StaticResource PICCInsertPositionToIndexConverter}}">
-            <Picker.Items>
-              <x:String>Nicht definiert</x:String>
-              <x:String>Unterhalb Ellbogen</x:String>
-              <x:String>Oberhalb Ellbogen</x:String>
-            </Picker.Items>
-          </Picker>
-          
-          <Label Text="Grösse in French" ></Label>
-          <Entry x:Name="PiccFrench" Text="{Binding FrenchSize, Mode=OneWay}"></Entry>
-
-          <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-            <Button x:Name="Save" Text="Speichern" Clicked="SaveButtonClicked"/>
-            <Button x:Name="Cancel" Text="Abbrechen" Clicked="CancelButtonClicked"/>
-          </StackLayout>
-        </StackLayout>
+          <Button x:Name="ScanButton" Text="Barcode scannen" Clicked="ScanClick"></Button>
+        </StackLayout>  
       </Grid>
     </ScrollView>
   </ContentPage.Content>

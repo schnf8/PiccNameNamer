@@ -1,5 +1,9 @@
-﻿using NameMaker.Models;
+﻿using Android.App;
+using Android.Content;
+using NameMaker.Model;
+using NameMaker.Models;
 using NameMaker.ModelViewController;
+using NameMaker.Utilitys;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,132 +19,171 @@ namespace NameMaker.Views
 
     public partial class MyPICCPage : ContentPage
     {
-        /// <summary>
-        /// bool to handle if the user either selects Switzerland or another Country for the picc implementation
-        /// </summary>
-        private bool changeInsertedPlace;
-
-        /// <summary>
-        /// int for checking if either Switzerland or abroad is selected in the country picker element
-        /// </summary>
-        private readonly int SWITZERLAND = 1;
-        private readonly int ABROAD = 2;
-
+        // Variable for the current dispalyed PICC (needed to keep the original information accessable)
         private Picc currentPicc;
+
+        // Variable if the user wants to add a new picc.
+        private PiccModel selectedPiccModel = null;
+
+        /// <summary>
+        /// Constructor that provides a PiccModel object. The object is given by the "SearchAPiccPage".
+        /// </summary>
+        /// <param name="model"></param>
+        public MyPICCPage(PiccModel model)
+        {
+            selectedPiccModel = model;
+            loadMyPiccPage();
+
+        }
 
 
         public MyPICCPage()
         {
             loadMyPiccPage();
-
         }
 
         /// <summary>
-        /// This method initalizes the page and also add all needed information to the information panel, if the user has already registerd a picc
+        /// This method initalizes the page and also add all needed information to the information panel, depending if the user wants to add a new picc,
+        /// if already a picc is registered or not.
+        /// 
+        /// author: Florian Schnyder
         /// </summary>
         private void loadMyPiccPage()
         {
             InitializeComponent();
-            addAllOptions();
 
-            //Checks if a current picc is saved and bind the information to the page. If the piccs expirationdate is not set, the information will be added to the page. If the expiration date is set, but does not lie in the past, the information will also be added.
-            if (CurrentAndOldPiccs.currentAndOldPiccs.Count() != 0 && (!CurrentAndOldPiccs.currentAndOldPiccs.Last().IsExpirationDateSet ||
-                (CurrentAndOldPiccs.currentAndOldPiccs.Last().IsExpirationDateSet && CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate >= DateTime.Today)))
+            // Checks if the user has already saved a picc. If yes, the last added picc needs to be active, otherwise it won't be displayed.
+            if (CurrentAndOldPiccs.currentAndOldPiccs.Count() != 0 && (!CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore))
             {
-                //If not set, copy the current datas of the picc object. The current picc object will be needed if the cancel buttons has been clicked.
-                if (currentPicc == null)
+                
+                // Checks if the selectedPiccModel is null. If it is not null, the user wants to add a new picc and the code below is useless.
+                if (selectedPiccModel == null)
                 {
-                    currentPicc = new Picc(CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate,
-                   CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition);
+                    //If not set, copy the current datas of the picc object. The current picc object will be needed if the cancel buttons has been clicked.
+                    if (currentPicc == null)
+                    {
+                        currentPicc = new Picc(CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate,
+                       CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition);
+
+                    }
+
+                    //Load the current carried picc to the binding context
+                    BindingContext = new CurrentPiccModelView(CurrentAndOldPiccs.currentAndOldPiccs.Last());
+
+                    //make the information panel visible and the edit button visible
+                    PiccInformation.IsVisible = true;
+                    EditButton.IsVisible = true;
+                    AllPiccs.IsVisible = true;
+                    enablePiccDetails(false);
+
+                    addGestureRegognizerToImage();
 
                 }
-
-                //Load the current carried picc to the binding context
-                BindingContext = new CurrentPiccModelView(CurrentAndOldPiccs.currentAndOldPiccs.Last());
-
-                //make the information panel visible and the edit button visible
-                PiccInformation.IsVisible = true;
-                EditButton.IsVisible = true;
-                AllPiccs.IsVisible = true;
             }
-
-            enablePiccDetails(false);
-
-            // Adds a Gesture Regognizer to the picture element, 
-            if (PiccImage.Source != null)
+            //If the selectedPiccModel is not null, the user wants to add a new picc model.
+            if (selectedPiccModel != null)
             {
-                TapGestureRecognizer tapGesture = new TapGestureRecognizer();
-                tapGesture.Tapped += (s, e) =>
-                {
-                    Navigation.PushAsync(new PicturePage((new ImageElement(PiccImage))));
-                };
-                PiccImage.GestureRecognizers.Add(tapGesture);
+                userWantsToAddANewPicc();
+                addGestureRegognizerToImage();
             }
-            else { PiccImage.IsVisible = false; }
 
         }
 
         /// <summary>
         /// This method makes sure that the page is reloaded and the latest picc model will be displayed.
+        /// If the selectedPiccModel has a value, the page does not need to be reloaded again. 
         /// </summary>
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            loadMyPiccPage();
-
+            if (selectedPiccModel == null)
+            {
+                loadMyPiccPage();
+            }
+            
         }
 
         /// <summary>
-        /// This method checks if the user has selected Switzerland, Abroad or nothing on the inserted country picker. Depending on the 
-        /// selection, the interface shows all information either Switzerland, Abroad or none of them.
+        /// This method checks if the user has selected Switzerland, Abroad or nothing on the inserted country picker. If the user
+        /// has no country selected, he is not able to enter a city.
         /// </summary>
         /// <param name="o"></param>
         /// <param name="e"></param>
         void SideSelected(object o, EventArgs e)
         {
-
-            if (Country.SelectedIndex == SWITZERLAND)
+            if ((PICCInsertCountry)Country.SelectedIndex != PICCInsertCountry.Undefined)
             {
-                changeInsertedPlace = true;
-                changeBetweenSwitzerlandAndOthers(changeInsertedPlace);
-            }
-            else if (Country.SelectedIndex == ABROAD)
-            {
-                changeInsertedPlace = false;
-                changeBetweenSwitzerlandAndOthers(changeInsertedPlace);
+                InsertCity.IsVisible = true;
+                return;
             }
             else
             {
-
-                InsertedPlaceCH.IsVisible = false;
-                InsertedPlaceAbroad.IsVisible = false;
+                InsertCity.Text = "";
+                InsertCity.IsVisible = false;
             }
         }
 
+        /// <summary>
+        /// This method moves the user forward to an overview with all picc models.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="e"></param>
         void AllPiccsClicked(object o, EventArgs e)
         {
+            if (CurrentAndOldPiccs.currentAndOldPiccs.FirstOrDefault() == null)
+            {
+                DisplayAlert("Information", "Kein PICC Model gefunden", "Zurück");
+                return;
+            }
             Navigation.PushAsync(new AllPiccPage());
         }
 
 
-        void SaveButtonClicked(object o, EventArgs e)
-        {
+        async void SaveButtonClicked(object o, EventArgs e)
+        {   
+            //Warns the user that the current picc wont be visible again if he presses "Weiterfahren"
+            if (CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore)
+            {
+                bool remove = await DisplayAlert("Warnung", "PICC wird bei Inaktivsetzung nicht mehr in aktueller Ansicht angezeigt!", "Weiterfahren", "Abbrechen");
+                if (!remove)
+                {
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = false;
+
+                }
+            }
+
+            // Make sure that the currentPicc and the selectedPiccModel variable are null before the page reloads itself.
             currentPicc = null;
+            selectedPiccModel = null;
             loadMyPiccPage();
         }
 
         void CancelButtonClicked(object o, EventArgs e)
-        {
-            //Sets all the values back to the previous values
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate = currentPicc.InsertDate;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel.FrenchSize = currentPicc.PiccModel.FrenchSize;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity = currentPicc.InsertCity;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry = currentPicc.InsertCountry;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide = currentPicc.InsertSide;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition = currentPicc.InsertPosition;
-            CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate = currentPicc.RemovalDate;
-
-            loadMyPiccPage();
+        {   
+            // If the selected picc model is null, the user wants to cancel a change on the current picc.
+            // In this case, all picc values will be overriden by the original information
+            if (selectedPiccModel == null)
+            {
+                //Sets all the values back to the previous values
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate = currentPicc.InsertDate;
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel.FrenchSize = currentPicc.PiccModel.FrenchSize;
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity = currentPicc.InsertCity;
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry = currentPicc.InsertCountry;
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide = currentPicc.InsertSide;
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition = currentPicc.InsertPosition;
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate = currentPicc.RemovalDate;
+                CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = currentPicc.IsNotActiveAnymore;
+                
+                loadMyPiccPage();
+            }
+            //If the selectedPiccModel is not null, the user wants to cancel his new selected picc model 
+            //(maybe due to a misentry or he does not want to add a new picc at all).
+            else
+            {   // Removes the new created entry in the currentAndOldPiccs List
+                CurrentAndOldPiccs.currentAndOldPiccs.RemoveAt(CurrentAndOldPiccs.currentAndOldPiccs.Count - 1);
+                selectedPiccModel = null;
+                Navigation.PopAsync();
+            }
         }
 
         void EditButtonClicked(object o, EventArgs e)
@@ -157,17 +200,15 @@ namespace NameMaker.Views
         /// This method either enables or disables the input field for the picc information
         /// </summary>
         /// <param name="yesOrNo"></param>
-        private void enablePiccDetails(bool yesOrNo)
+        void enablePiccDetails(bool yesOrNo)
         {
             InsertedDate.IsEnabled = yesOrNo;
-            InsertedPlaceAbroad.IsEnabled = yesOrNo;
-            InsertedPlaceCH.IsEnabled = yesOrNo;
+            InsertCity.IsEnabled = yesOrNo;
             PiccSide.IsEnabled = yesOrNo;
             PiccPosition.IsEnabled = yesOrNo;
             PiccFrench.IsEnabled = yesOrNo;
             Country.IsEnabled = yesOrNo;
-            ExpirationDate.IsEnabled = yesOrNo;
-            ExpirationSwitch.IsEnabled = yesOrNo;
+            PiccRemoveButton.IsEnabled = yesOrNo;
 
             //Changes the visibility to either save/cancel buttons or edit/addAPicc buttons
             SaveAndCancelButtons.IsVisible = yesOrNo;
@@ -175,106 +216,41 @@ namespace NameMaker.Views
 
         }
 
-        /// <summary>
-        /// This method checks if either the city picker for Switzerland is visible or the entry box to enter a city abroad
-        /// </summary>
-        /// <param name="choice"></param>
-        private void changeBetweenSwitzerlandAndOthers(bool choice)
+        public void PiccRemoveButtonClicked(object o, EventArgs e)
         {
-            if (choice)
-            {
-                InsertedPlaceCH.IsVisible = true;
+            RemovalDate.IsVisible = true;
+            RemovalDate.Focus();
+            CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = true;
+            PiccRemoveButton.IsEnabled = false;
 
-                InsertedPlaceAbroad.IsVisible = false;
-            }
-            else
-            {
-
-                InsertedPlaceCH.IsVisible = false;
-
-                InsertedPlaceAbroad.IsVisible = true;
-            }
         }
 
-        /// <summary>
-        /// This method adds all possible options to the picker objects (countries, cities and bodyside)
-        /// </summary>
-        private void addAllOptions()
+        void userWantsToAddANewPicc()
         {
+            currentPicc = new Picc(selectedPiccModel, DateTime.Today, PICCInsertCountry.Undefined, " ", PICCInsertSide.Undefined, PICCInsertPosition.Undefined);
+            CurrentAndOldPiccs.currentAndOldPiccs.Add(currentPicc);
+            BindingContext = new CurrentPiccModelView(CurrentAndOldPiccs.currentAndOldPiccs.Last());
 
-            InsertedPlaceCH.Items.Add("");
-            InsertedPlaceCH.Items.Add("Inselspital Bern");
-            InsertedPlaceCH.Items.Add("UniversitätsSpital Zürich");
-            InsertedPlaceCH.Items.Add("Universitätsspital Basel");
-            InsertedPlaceCH.Items.Add("Universitätsspital Genf");
-            InsertedPlaceCH.Items.Add("Andere Einrichtung");
-            
+            PiccInformation.IsVisible = true;
+            EditButton.IsVisible = false;
+            AllPiccs.IsVisible = false;
+            PiccRemoveButton.IsVisible = false;
+            enablePiccDetails(true);
         }
 
-        public async void SwitchToggled(object o, EventArgs e)
+        void addGestureRegognizerToImage()
         {
-            if (ExpirationSwitch.IsToggled && !currentPicc.IsExpirationDateSet)
+            // Adds a Gesture Regognizer to the picture element, 
+            if (PiccImage.Source != null)
             {
-                bool expiartion = await DisplayAlert("Warnung", "PICC wird bei Inaktivsetzung nicht mehr in aktueller Ansicht angezeigt, sobald das Inaktivdatum überschritten wird!", "Weiterfahren", "Abbrechen");
-                if (expiartion == false)
-                {
-                    ExpirationSwitch.IsToggled = false;
-                    return;
-
-                }
-                else
-                {
-                    ExpirationDate.IsVisible = true;
-                    return;
-                }
-                
-            } else if(ExpirationSwitch.IsToggled && currentPicc.IsExpirationDateSet)
-            {
-                ExpirationDate.IsVisible = false;
-                return;
+                TapGestureRecognizer tapGesture = new TapGestureRecognizer();
+                tapGesture.Tapped += (s, e) =>
+                        {
+                            Navigation.PushAsync(new PicturePage((new ImageElement(PiccImage))));
+                        };
+                PiccImage.GestureRecognizers.Add(tapGesture);
             }
-            else { ExpirationDate.IsVisible = false; }   
-
+            else { PiccImage.IsVisible = false; }
         }
     }
 }
-
-
-
-///// <summary>
-///// This method saves all changes to the current picc object. 
-///// </summary>
-//private void savePiccChanges()
-//{
-//    // Checks if the entered french size is in double format. If not, a popup will inform the user.
-//    double frenchSize;
-//    if (double.TryParse(PiccFrench.Text.Replace('.', ','), out frenchSize))
-//    {
-//        CurrentAndOldPiccs.currentAndOldPiccs.Last().frenchSize = frenchSize;
-//        if (frenchSize == 0)
-//        {
-//            PiccFrench.IsVisible = false;
-//        }
-//    }
-//    else
-//    {
-//        DisplayAlert("Fehler", "Kein gültiger Wert bei French Grösse!\nBeispiel: 4.6", "OK");
-//        return;
-
-//    }
-
-//    CurrentAndOldPiccs.currentAndOldPiccs.Last().insertDate = InsertedDate.Date;
-//    CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCountry = Country.Items.ElementAtOrDefault(Country.SelectedIndex);
-//    CurrentAndOldPiccs.currentAndOldPiccs.Last().piccSide = PiccSide.Items.ElementAtOrDefault(PiccSide.SelectedIndex);
-
-//    if (Country.SelectedIndex == SWITZERLAND)
-//    { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = InsertedPlaceCH.Items.ElementAtOrDefault(InsertedPlaceCH.SelectedIndex); }
-
-//    else if (Country.SelectedIndex == ABROAD)
-//    { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = InsertedPlaceAbroad.Text; }
-
-//    else { CurrentAndOldPiccs.currentAndOldPiccs.Last().insertCity = ""; }
-
-//    ///disables all the labels, pickers and so on after saving the new information
-//    enablePiccDetails(false);
-//}
