@@ -22,9 +22,13 @@
     <ScrollView>
       <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" >
         <StackLayout x:Name="PiccInformation" Orientation="Vertical" IsVisible="False" VerticalOptions="FillAndExpand">
-          <Label x:Name="PiccName" Text="{Binding PiccName}"></Label>
+          <Label Text="Modellbezeichnung:"></Label>
+          <Entry x:Name="PiccName" Text="{Binding PiccName}"></Entry>
           <Image x:Name="PiccImage" Source="{Binding ImageSource}" Aspect="AspectFit" HeightRequest="200" WidthRequest="100"/>
 
+          <Label Text="Grösse in French:" ></Label>
+          <Entry x:Name="PiccFrench" Text="{Binding FrenchSize}"></Entry>
+          
           <Label Text="Legedatum:" HorizontalOptions="Fill" WidthRequest="80" />
           <DatePicker x:Name="InsertedDate" Date="{Binding InsertDate}">
             <DatePicker.Format>d</DatePicker.Format>
@@ -41,7 +45,7 @@
 
           <Entry x:Name="InsertCity" Text="{Binding City}" Placeholder="Bitte Institution eingeben" IsVisible="False"></Entry>
 
-          <Label Text="Körperseite PICC" ></Label>
+          <Label Text="Körperseite PICC:" ></Label>
           <Picker x:Name="PiccSide" SelectedIndex="{Binding PiccSide, Converter={StaticResource PICCInsertSideToIndexConverter}}">
             <Picker.Items>
               <x:String>Nicht definiert</x:String>
@@ -50,7 +54,7 @@
             </Picker.Items>
           </Picker>
 
-          <Label Text="Position PICC" ></Label>
+          <Label Text="Position PICC:" ></Label>
           <Picker x:Name="PiccPosition" SelectedIndex="{Binding PiccPosition, Converter={StaticResource PICCInsertPositionToIndexConverter}}">
             <Picker.Items>
               <x:String>Nicht definiert</x:String>
@@ -59,8 +63,7 @@
             </Picker.Items>
           </Picker>
 
-          <Label Text="Grösse in French" ></Label>
-          <Entry x:Name="PiccFrench" Text="{Binding FrenchSize}"></Entry>
+         
 
           <StackLayout x:Name="RemovalLayout" Orientation="Vertical">
             <Button x:Name="PiccRemoveButton" Text="PICC inaktiv setzten" Clicked="PiccRemoveButtonClicked"/>
@@ -73,13 +76,13 @@
         <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
           <StackLayout x:Name="EditAndAddButtons" Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="True">
             <Button x:Name="EditButton" Text="Bearbeiten" Clicked="EditButtonClicked" IsVisible="False"/>
-            <Button x:Name="AddAPicc" Text="Neuer PICC erfassen" Clicked="AddAPiccButtonClicked"/>
+            <Button x:Name="AddAPiccButton" Text="Neuer PICC erfassen" Clicked="AddAPiccButtonClicked"/>
           </StackLayout>
           <StackLayout x:Name="SaveAndCancelButtons" Orientation="Horizontal" VerticalOptions="Center" IsVisible="False">
             <Button x:Name="SaveButton" Text="Speichern" Clicked="SaveButtonClicked"/>
             <Button x:Name="CancelButton" Text="Abbrechen" Clicked="CancelButtonClicked"/>
           </StackLayout>
-          <Button x:Name="AllPiccs" Text="Alle bisherigen Picc Modelle" Clicked="AllPiccsClicked"></Button>
+          <Button x:Name="AllPiccsButton" Text="Alle bisherigen Picc Modelle" Clicked="AllPiccsClicked"></Button>
         </StackLayout>
       </StackLayout>
     </ScrollView>

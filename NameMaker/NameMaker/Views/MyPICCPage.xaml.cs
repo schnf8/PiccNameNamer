@@ -55,17 +55,13 @@ namespace NameMaker.Views
             // Checks if the user has already saved a picc. If yes, the last added picc needs to be active, otherwise it won't be displayed.
             if (CurrentAndOldPiccs.currentAndOldPiccs.Count() != 0 && (!CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore))
             {
-                
+
                 // Checks if the selectedPiccModel is null. If it is not null, the user wants to add a new picc and the code below is useless.
                 if (selectedPiccModel == null)
                 {
                     //If not set, copy the current datas of the picc object. The current picc object will be needed if the cancel buttons has been clicked.
-                    if (currentPicc == null)
-                    {
-                        currentPicc = new Picc(CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate,
-                       CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition);
-
-                    }
+                    currentPicc = new Picc(CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate,
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide, CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition);
 
                     //Load the current carried picc to the binding context
                     BindingContext = new CurrentPiccModelView(CurrentAndOldPiccs.currentAndOldPiccs.Last());
@@ -73,7 +69,7 @@ namespace NameMaker.Views
                     //make the information panel visible and the edit button visible
                     PiccInformation.IsVisible = true;
                     EditButton.IsVisible = true;
-                    AllPiccs.IsVisible = true;
+                    AllPiccsButton.IsVisible = true;
                     enablePiccDetails(false);
 
                     addGestureRegognizerToImage();
@@ -100,7 +96,24 @@ namespace NameMaker.Views
             {
                 loadMyPiccPage();
             }
-            
+
+            if (CurrentAndOldPiccs.currentAndOldPiccs.FirstOrDefault() == null)
+            {
+                AllPiccsButton.IsEnabled = false;
+            }
+
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            if (selectedPiccModel != null)
+            {
+                cancelNewPiccEntry();
+
+                return true;
+            }
+
+            return base.OnBackButtonPressed();
         }
 
         /// <summary>
@@ -130,59 +143,70 @@ namespace NameMaker.Views
         /// <param name="e"></param>
         void AllPiccsClicked(object o, EventArgs e)
         {
-            if (CurrentAndOldPiccs.currentAndOldPiccs.FirstOrDefault() == null)
-            {
-                DisplayAlert("Information", "Kein PICC Model gefunden", "Zurück");
-                return;
-            }
             Navigation.PushAsync(new AllPiccPage());
         }
 
 
         async void SaveButtonClicked(object o, EventArgs e)
-        {   
-            //Warns the user that the current picc wont be visible again if he presses "Weiterfahren"
-            if (CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore)
+        {
+            
+            if (selectedPiccModel != null)
             {
-                bool remove = await DisplayAlert("Warnung", "PICC wird bei Inaktivsetzung nicht mehr in aktueller Ansicht angezeigt!", "Weiterfahren", "Abbrechen");
-                if (!remove)
-                {
-                    CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = false;
+                // TODO: Fix this
+                await Navigation.PopModalAsync();
+                ////////// hie söt dä huere Kack no Navgation.PoPAsync() o.Ä. mache!!
 
-                }
             }
-
-            // Make sure that the currentPicc and the selectedPiccModel variable are null before the page reloads itself.
-            currentPicc = null;
-            selectedPiccModel = null;
-            loadMyPiccPage();
-        }
-
-        void CancelButtonClicked(object o, EventArgs e)
-        {   
-            // If the selected picc model is null, the user wants to cancel a change on the current picc.
-            // In this case, all picc values will be overriden by the original information
-            if (selectedPiccModel == null)
+            else
             {
-                //Sets all the values back to the previous values
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate = currentPicc.InsertDate;
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel.FrenchSize = currentPicc.PiccModel.FrenchSize;
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity = currentPicc.InsertCity;
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry = currentPicc.InsertCountry;
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide = currentPicc.InsertSide;
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition = currentPicc.InsertPosition;
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate = currentPicc.RemovalDate;
-                CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = currentPicc.IsNotActiveAnymore;
-                
+                //Warns the user that the current picc wont be visible again if he presses "Weiterfahren"
+                if (CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore)
+                {
+                    bool remove = await DisplayAlert("Warnung", "PICC wird bei Inaktivsetzung nicht mehr in aktueller Ansicht angezeigt!", "Weiterfahren", "Abbrechen");
+                    if (!remove)
+                    {
+                        CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = false;
+
+                    }
+                }
+
+                // Make sure that the currentPicc and the selectedPiccModel variable are null before the page reloads itself.
+                currentPicc = null;
+                selectedPiccModel = null;
                 loadMyPiccPage();
             }
-            //If the selectedPiccModel is not null, the user wants to cancel his new selected picc model 
-            //(maybe due to a misentry or he does not want to add a new picc at all).
-            else
-            {   // Removes the new created entry in the currentAndOldPiccs List
-                CurrentAndOldPiccs.currentAndOldPiccs.RemoveAt(CurrentAndOldPiccs.currentAndOldPiccs.Count - 1);
-                selectedPiccModel = null;
-                Navigation.PopAsync();
+        }
+
+        async void CancelButtonClicked(object o, EventArgs e)
+        {
+            bool cancel = await DisplayAlert("Warnung!", "Wollen Sie die Eingabe wirklich abbrechen?", "Ja", "Nein");
+
+            if (cancel)
+            {
+                // If the selected picc model is null, the user wants to cancel a change on the current picc.
+                // In this case, all picc values will be overriden by the original information
+                if (selectedPiccModel == null)
+                {
+                    //Sets all the values back to the previous values
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertDate = currentPicc.InsertDate;
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().PiccModel.FrenchSize = currentPicc.PiccModel.FrenchSize;
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCity = currentPicc.InsertCity;
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry = currentPicc.InsertCountry;
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertSide = currentPicc.InsertSide;
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertPosition = currentPicc.InsertPosition;
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate = currentPicc.RemovalDate;
+                    CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = currentPicc.IsNotActiveAnymore;
+
+                    loadMyPiccPage();
+                }
+                //If the selectedPiccModel is not null, the user wants to cancel his new selected picc model 
+                //(maybe due to a misentry or he does not want to add a new picc at all).
+                else
+                {   // Removes the new created entry in the currentAndOldPiccs List
+                    CurrentAndOldPiccs.currentAndOldPiccs.RemoveAt(CurrentAndOldPiccs.currentAndOldPiccs.Count - 1);
+                    selectedPiccModel = null;
+                    await Navigation.PopModalAsync();
+                }
             }
         }
 
@@ -202,6 +226,7 @@ namespace NameMaker.Views
         /// <param name="yesOrNo"></param>
         void enablePiccDetails(bool yesOrNo)
         {
+            PiccName.IsEnabled = yesOrNo;
             InsertedDate.IsEnabled = yesOrNo;
             InsertCity.IsEnabled = yesOrNo;
             PiccSide.IsEnabled = yesOrNo;
@@ -233,9 +258,20 @@ namespace NameMaker.Views
 
             PiccInformation.IsVisible = true;
             EditButton.IsVisible = false;
-            AllPiccs.IsVisible = false;
+            AllPiccsButton.IsVisible = false;
             PiccRemoveButton.IsVisible = false;
             enablePiccDetails(true);
+        }
+
+        async void cancelNewPiccEntry()
+        {
+            bool cancel = await DisplayAlert("Warnung!", "Wollen Sie die Eingabe wirklich abbrechen?", "Ja", "Nein");
+
+            if (cancel)
+            {
+                await Navigation.PopModalAsync();
+            }
+
         }
 
         void addGestureRegognizerToImage()

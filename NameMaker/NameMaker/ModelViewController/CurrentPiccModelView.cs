@@ -14,24 +14,8 @@ namespace NameMaker.ModelViewController
     {
         private Picc picc;
       
-       
-        private List<String> selectedPiccCountry = new List<string>();
-        private List<String> selectedPiccCity = new List<string>();
-
-
         public CurrentPiccModelView(Picc picc)
         {
-            selectedPiccCity.Add("");
-            selectedPiccCity.Add("Inselspital Bern");
-            selectedPiccCity.Add("UniversitätsSpital Zürich");
-            selectedPiccCity.Add("Universitätsspital Basel");
-            selectedPiccCity.Add("Universitätsspital Genf");
-            selectedPiccCity.Add("Andere Einrichtung");
-
-            selectedPiccCountry.Add("");
-            selectedPiccCountry.Add("Schweiz");
-            selectedPiccCountry.Add("Ausland");
-
             this.picc = picc;
         }
 

@@ -10,20 +10,15 @@
                 WinPhone="20, 20, 20, 20" />
   </ContentPage.Padding>  
   <ContentPage.Content>
-    <ScrollView>
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition  Height="100"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollView>     
         <StackLayout Orientation="Vertical" Grid.Row="0">
           <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
             <Entry x:Name="PiccEntry" Placeholder="Bitte PICC Name eingeben"/>
             <Button x:Name="PiccSearchButton" Text="Suchen" Clicked="PiccSearchButtonClicked"></Button>
           </StackLayout>
           <Button x:Name="ScanButton" Text="Barcode scannen" Clicked="ScanClick"></Button>
-        </StackLayout>  
-      </Grid>
+          <Button x:Name="AddPiccManualButton" Text="PICC manuell erfassen" Clicked="AddPiccManualButtonClick"></Button>
+        </StackLayout>        
     </ScrollView>
   </ContentPage.Content>
 </ContentPage>

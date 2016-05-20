@@ -16,7 +16,7 @@ namespace NameMaker.Views
 {
     public partial class SearchAPiccPage : ContentPage
     {
-        
+
         // Loads all the available picc models, so that they can be found either by an userinput or a barcode scan.
         List<PiccModel> piccList = AllPiccModels.getModels();
 
@@ -33,8 +33,15 @@ namespace NameMaker.Views
         void PiccSearchButtonClicked(object o, EventArgs e)
         {
             string searchName = PiccEntry.Text;
-            searchForAPiccModel(searchName);           
+            searchForAPiccModel(searchName);
 
+        }
+
+        void AddPiccManualButtonClick(object o, EventArgs e)
+        {
+            PiccModel model = new PiccModel(null, 0, null, null);
+            //Navigation.PushAsync(new MyPICCPage(model));
+            Navigation.PushModalAsync(new MyPICCPage(model));
         }
 
         async void ScanClick(object sender, EventArgs e)
@@ -50,27 +57,39 @@ namespace NameMaker.Views
 
         }
 
-        void searchForAPiccModel(string nameOrBarcode)
+        async void searchForAPiccModel(string nameOrBarcode)
         {
             foreach (PiccModel piccModel in piccList)
             {
                 // if either the picc name or the barcode could be found in the database
                 if ((string.Compare(piccModel.PiccName, nameOrBarcode, StringComparison.OrdinalIgnoreCase) == 0) || (string.Compare(piccModel.Barcode, nameOrBarcode, StringComparison.OrdinalIgnoreCase) == 0))
                 {
-                    Navigation.PushAsync(new MyPICCPage(piccModel));
+                    await Navigation.PushAsync(new MyPICCPage(piccModel));
+                    await Navigation.PushModalAsync(new MyPICCPage(piccModel));
                     return;
                 }
 
                 //only for test!!!
                 if (nameOrBarcode == "e")
                 {
-                    Navigation.PushAsync(new MyPICCPage(piccModel));
+                    //await Navigation.PushAsync(new MyPICCPage(piccModel));
+                    await Navigation.PushModalAsync(new MyPICCPage(piccModel));
                     return;
                 }
             }
 
-            DisplayAlert("Information", "PICC Modell konnte nicht gefunden werden", "OK");
-            PiccEntry.Text = "";
+            bool registerManually = await DisplayAlert("Information", "PICC Modell konnte nicht gefunden werden", "PICC manuell erfassen", "OK");
+            if (registerManually)
+            {
+                PiccModel model = new PiccModel(PiccEntry.Text, 0, null, null);
+                await Navigation.PushModalAsync(new MyPICCPage(model));
+
+            }
+            else
+            {
+                PiccEntry.Text = "";
+            }
+
         }
     }
 }
