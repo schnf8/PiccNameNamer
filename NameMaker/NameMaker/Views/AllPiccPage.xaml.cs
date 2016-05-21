@@ -21,13 +21,21 @@ namespace NameMaker
             PiccList.ItemsSource = CurrentAndOldPiccs.currentAndOldPiccs;
         }
 
-        public async void selectedPicc(object o, EventArgs e)
+        public async void SelectedPicc(object o, EventArgs e)
         {
             if (PiccList.SelectedItem != null)
             {
                 Picc selectedPicc = (Picc)PiccList.SelectedItem;
+                if(selectedPicc.RemovalDate != null)
+                {
+                    await DisplayAlert(selectedPicc.PiccModel.PiccName, "Legedatum: " + selectedPicc.InsertDate.ToString("d") + "\nEntfernungsdatum: " + ((DateTime)selectedPicc.RemovalDate).ToString("d"), "Abbrechen");
 
-                await DisplayAlert(selectedPicc.PiccModel.PiccName, "Legedatum: " + selectedPicc.InsertDate.ToString("d") + "\nEntfernungsdatum: " + selectedPicc.RemovalDate.ToString("d"), "Abbrechen");
+                }
+                else
+                {
+                    await DisplayAlert(selectedPicc.PiccModel.PiccName, "Legedatum: " + selectedPicc.InsertDate.ToString("d") + "\nEntfernungsdatum: ", "Abbrechen");
+
+                }
 
                 PiccList.SelectedItem = null;
 

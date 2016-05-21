@@ -100,9 +100,15 @@ namespace NameMaker.ModelViewController
         /// <summary>
         /// Returns the binded expiration date or sets a new date to the related object
         /// </summary>
-        public DateTime RemovalDate
+        public DateTime? RemovalDate
         {
-            get { return picc.RemovalDate; }
+            get { 
+                if(picc.RemovalDate != null)
+                {
+                    return picc.RemovalDate;
+                }
+
+                return DateTime.Today; }
             set
             {
                 if (picc.RemovalDate != value)
@@ -198,12 +204,12 @@ namespace NameMaker.ModelViewController
                 {
                     return picc.InsertCity;
                 }
-                return "";
+                return " ";
             }
 
             set
             {
-                if (picc.InsertCity != value && picc.InsertCountry == PICCInsertCountry.Undefined)
+                if (picc.InsertCity != value && picc.InsertCountry != PICCInsertCountry.Undefined)
                 {
                     picc.InsertCity = value;
                     OnPropertyChanged("City");

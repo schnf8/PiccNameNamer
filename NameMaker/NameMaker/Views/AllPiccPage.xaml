@@ -10,7 +10,7 @@
                 WinPhone="20, 20, 20, 20" />
   </ContentPage.Padding>
   <ContentPage.Content>
-    <ListView x:Name="PiccList" ItemSelected="selectedPicc">
+    <ListView x:Name="PiccList" ItemSelected="SelectedPicc">
       <ListView.ItemTemplate>
         <DataTemplate>
           <TextCell Text="{Binding PiccModel.PiccName}" />

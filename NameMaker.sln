@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameMaker.Droid", "NameMaker\NameMaker.Droid\NameMaker.Droid.csproj", "{17F6E93F-7FC2-423B-8A2D-60F39F2CB18B}"
 EndProject
@@ -128,6 +128,7 @@ Global
 		{7ADA06C8-DA97-4797-A2EE-8695CD95CA27}.AppStore|x64.ActiveCfg = AppStore|iPhone
 		{7ADA06C8-DA97-4797-A2EE-8695CD95CA27}.AppStore|x86.ActiveCfg = AppStore|iPhone
 		{7ADA06C8-DA97-4797-A2EE-8695CD95CA27}.Debug|Any CPU.ActiveCfg = Debug|iPhone
+		{7ADA06C8-DA97-4797-A2EE-8695CD95CA27}.Debug|Any CPU.Deploy.0 = Debug|iPhone
 		{7ADA06C8-DA97-4797-A2EE-8695CD95CA27}.Debug|ARM.ActiveCfg = Debug|iPhone
 		{7ADA06C8-DA97-4797-A2EE-8695CD95CA27}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{7ADA06C8-DA97-4797-A2EE-8695CD95CA27}.Debug|iPhone.Build.0 = Debug|iPhone
@@ -180,6 +181,8 @@ Global
 		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.AppStore|x86.Build.0 = Release|x86
 		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.AppStore|x86.Deploy.0 = Release|x86
 		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.Debug|Any CPU.Build.0 = Debug|x86
+		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.Debug|ARM.ActiveCfg = Debug|ARM
 		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.Debug|ARM.Build.0 = Debug|ARM
 		{A467CFF2-178F-47AE-BA32-A0A4BA82294E}.Debug|ARM.Deploy.0 = Debug|ARM

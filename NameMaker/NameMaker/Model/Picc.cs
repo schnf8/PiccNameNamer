@@ -32,7 +32,7 @@ namespace NameMaker.Models
 
         public PiccModel PiccModel { get; set; }
         public DateTime InsertDate { get; set; }
-        public DateTime RemovalDate { get; set; }
+        public DateTime? RemovalDate { get; set; }
         public bool IsNotActiveAnymore { get; set; }
         public PICCInsertCountry InsertCountry { get; set; }
         public string InsertCity { get; set; }
@@ -47,10 +47,8 @@ namespace NameMaker.Models
             this.InsertCity = insertCity;
             this.InsertCountry = insertCountry;
             this.InsertSide = piccSide;
-            this.InsertPosition = piccPosition;                     
-
-            this.RemovalDate = DateTime.Today.AddMonths(3);
-            
+            this.InsertPosition = piccPosition;
+          
         }
     }
 }

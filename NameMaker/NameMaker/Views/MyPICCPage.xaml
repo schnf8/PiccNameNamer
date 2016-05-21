@@ -35,7 +35,7 @@
           </DatePicker>
 
           <Label Text="Legeort:" HorizontalOptions="Fill" WidthRequest="80" />
-          <Picker x:Name="Country" SelectedIndexChanged="SideSelected" SelectedIndex="{Binding InsertCountry, Converter={StaticResource PICCInsertCountryToIndexConverter}}">
+          <Picker x:Name="Country" SelectedIndexChanged="CountrySelected" SelectedIndex="{Binding InsertCountry, Converter={StaticResource PICCInsertCountryToIndexConverter}}">
             <Picker.Items>
               <x:String>Nicht definiert</x:String>
               <x:String>Schweiz</x:String>
@@ -43,7 +43,7 @@
             </Picker.Items>
           </Picker>
 
-          <Entry x:Name="InsertCity" Text="{Binding City}" Placeholder="Bitte Institution eingeben" IsVisible="False"></Entry>
+          <Entry x:Name="InsertCity" Text="{Binding City}" Placeholder="Bitte Institution eingeben"></Entry>
 
           <Label Text="Körperseite PICC:" ></Label>
           <Picker x:Name="PiccSide" SelectedIndex="{Binding PiccSide, Converter={StaticResource PICCInsertSideToIndexConverter}}">

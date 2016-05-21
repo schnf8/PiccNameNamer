@@ -32,14 +32,14 @@ namespace NameMaker.Views
         public MyPICCPage(PiccModel model)
         {
             selectedPiccModel = model;
-            loadMyPiccPage();
+            LoadMyPiccPage();
 
         }
 
 
         public MyPICCPage()
         {
-            loadMyPiccPage();
+            LoadMyPiccPage();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace NameMaker.Views
         /// 
         /// author: Florian Schnyder
         /// </summary>
-        private void loadMyPiccPage()
+        private void LoadMyPiccPage()
         {
             InitializeComponent();
 
@@ -66,21 +66,22 @@ namespace NameMaker.Views
                     //Load the current carried picc to the binding context
                     BindingContext = new CurrentPiccModelView(CurrentAndOldPiccs.currentAndOldPiccs.Last());
 
-                    //make the information panel visible and the edit button visible
+                    //make the information panel visible and the edit button visible, also checks if the user has selected a country
                     PiccInformation.IsVisible = true;
                     EditButton.IsVisible = true;
                     AllPiccsButton.IsVisible = true;
-                    enablePiccDetails(false);
+                    EnablePiccDetails(false);
+                    CountrySelected(new object(), new EventArgs());
 
-                    addGestureRegognizerToImage();
+                    AddGestureRegognizerToImage();
 
                 }
             }
             //If the selectedPiccModel is not null, the user wants to add a new picc model.
             if (selectedPiccModel != null)
             {
-                userWantsToAddANewPicc();
-                addGestureRegognizerToImage();
+                UserWantsToAddANewPicc();
+                AddGestureRegognizerToImage();
             }
 
         }
@@ -94,7 +95,7 @@ namespace NameMaker.Views
             base.OnAppearing();
             if (selectedPiccModel == null)
             {
-                loadMyPiccPage();
+                LoadMyPiccPage();
             }
 
             if (CurrentAndOldPiccs.currentAndOldPiccs.FirstOrDefault() == null)
@@ -108,7 +109,7 @@ namespace NameMaker.Views
         {
             if (selectedPiccModel != null)
             {
-                cancelNewPiccEntry();
+                CancelNewPiccEntry();
 
                 return true;
             }
@@ -122,16 +123,16 @@ namespace NameMaker.Views
         /// </summary>
         /// <param name="o"></param>
         /// <param name="e"></param>
-        void SideSelected(object o, EventArgs e)
+        void CountrySelected(object o, EventArgs e)
         {
-            if ((PICCInsertCountry)Country.SelectedIndex != PICCInsertCountry.Undefined)
+            if (CurrentAndOldPiccs.currentAndOldPiccs.Last().InsertCountry != PICCInsertCountry.Undefined)
             {
                 InsertCity.IsVisible = true;
                 return;
             }
             else
             {
-                InsertCity.Text = "";
+                InsertCity.Text = " ";
                 InsertCity.IsVisible = false;
             }
         }
@@ -166,6 +167,7 @@ namespace NameMaker.Views
                     if (!remove)
                     {
                         CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = false;
+                      //  CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate = null;
 
                     }
                 }
@@ -173,7 +175,8 @@ namespace NameMaker.Views
                 // Make sure that the currentPicc and the selectedPiccModel variable are null before the page reloads itself.
                 currentPicc = null;
                 selectedPiccModel = null;
-                loadMyPiccPage();
+                LoadMyPiccPage();
+                               
             }
         }
 
@@ -197,7 +200,7 @@ namespace NameMaker.Views
                     CurrentAndOldPiccs.currentAndOldPiccs.Last().RemovalDate = currentPicc.RemovalDate;
                     CurrentAndOldPiccs.currentAndOldPiccs.Last().IsNotActiveAnymore = currentPicc.IsNotActiveAnymore;
 
-                    loadMyPiccPage();
+                    LoadMyPiccPage();
                 }
                 //If the selectedPiccModel is not null, the user wants to cancel his new selected picc model 
                 //(maybe due to a misentry or he does not want to add a new picc at all).
@@ -212,7 +215,7 @@ namespace NameMaker.Views
 
         void EditButtonClicked(object o, EventArgs e)
         {
-            enablePiccDetails(true);
+            EnablePiccDetails(true);
         }
 
         void AddAPiccButtonClicked(object o, EventArgs e)
@@ -224,7 +227,7 @@ namespace NameMaker.Views
         /// This method either enables or disables the input field for the picc information
         /// </summary>
         /// <param name="yesOrNo"></param>
-        void enablePiccDetails(bool yesOrNo)
+        void EnablePiccDetails(bool yesOrNo)
         {
             PiccName.IsEnabled = yesOrNo;
             InsertedDate.IsEnabled = yesOrNo;
@@ -250,7 +253,7 @@ namespace NameMaker.Views
 
         }
 
-        void userWantsToAddANewPicc()
+        void UserWantsToAddANewPicc()
         {
             currentPicc = new Picc(selectedPiccModel, DateTime.Today, PICCInsertCountry.Undefined, " ", PICCInsertSide.Undefined, PICCInsertPosition.Undefined);
             CurrentAndOldPiccs.currentAndOldPiccs.Add(currentPicc);
@@ -260,10 +263,10 @@ namespace NameMaker.Views
             EditButton.IsVisible = false;
             AllPiccsButton.IsVisible = false;
             PiccRemoveButton.IsVisible = false;
-            enablePiccDetails(true);
+            EnablePiccDetails(true);
         }
 
-        async void cancelNewPiccEntry()
+        async void CancelNewPiccEntry()
         {
             bool cancel = await DisplayAlert("Warnung!", "Wollen Sie die Eingabe wirklich abbrechen?", "Ja", "Nein");
 
@@ -274,7 +277,7 @@ namespace NameMaker.Views
 
         }
 
-        void addGestureRegognizerToImage()
+        void AddGestureRegognizerToImage()
         {
             // Adds a Gesture Regognizer to the picture element, 
             if (PiccImage.Source != null)
