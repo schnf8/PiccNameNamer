@@ -23,11 +23,10 @@
           </DataTemplate>
         </ListView.ItemTemplate>
       </ListView>
-      <Label x:Name="emailLabel" IsVisible="False"/>
+      <Label x:Name="emailLabel" IsVisible="False"/>    
       <Button x:Name="GlossaryPageButton" Text="Glossar" Clicked="GlossaryPageButtonClick"></Button>
       <Button x:Name="InformationOverviewButton" Text="Informationen" Clicked="InformationOverviewButtonClick"/>
       <Button x:Name="MyPiccButton" Text="PICC" Clicked="MyPiccButtonClick"/>
     </StackLayout>
-
   </ContentPage.Content>
 </ContentPage>

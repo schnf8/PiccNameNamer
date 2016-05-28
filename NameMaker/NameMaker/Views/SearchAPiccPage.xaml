@@ -12,9 +12,16 @@
   <ContentPage.Content>
     <ScrollView>     
         <StackLayout Orientation="Vertical" Grid.Row="0">
-          <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
-            <Entry x:Name="PiccEntry" Placeholder="Bitte PICC Name eingeben"/>
-            <Button x:Name="PiccSearchButton" Text="Suchen" Clicked="PiccSearchButtonClicked"></Button>
+          <StackLayout Orientation="Vertical" HorizontalOptions="Fill">
+            <SearchBar x:Name="PiccEntry" Placeholder="Bitte PICC Name eingeben" SearchButtonPressed="PiccSearchButtonClicked" 
+                       TextChanged="SerachForAPiccModel" Unfocused="SearchBarUnfocused" Focused="SearchBarFocused"/>
+            <ListView x:Name="AllModels" ItemSelected="SelectedPicc" IsVisible="False" ItemsSource="{Binding PiccModels, Mode=OneWay}">
+              <ListView.ItemTemplate>
+                <DataTemplate>
+                  <TextCell Text="{Binding PiccName}" />
+                </DataTemplate>
+              </ListView.ItemTemplate>
+            </ListView>
           </StackLayout>
           <Button x:Name="ScanButton" Text="Barcode scannen" Clicked="ScanClick"></Button>
           <Button x:Name="AddPiccManualButton" Text="PICC manuell erfassen" Clicked="AddPiccManualButtonClick"></Button>

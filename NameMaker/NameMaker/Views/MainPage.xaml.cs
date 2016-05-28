@@ -25,7 +25,7 @@ namespace NameMaker
             namesList.ItemsSource = displayedNames;
 
         }
-        
+
         void MyPiccButtonClick(object sender, EventArgs e)
         {
             Navigation.PushAsync(new MyPICCPage());
@@ -65,7 +65,7 @@ namespace NameMaker
                 }
             }
             newName = NameTranslator.TranslateToName(NameText.Text);
-            
+
             if (!newName.Equals(null))
             {
                 foreach (Name a in newName)
@@ -86,8 +86,8 @@ namespace NameMaker
             {
                 emailLabel.IsVisible = true;
                 emailLabel.Text = namesList.SelectedItem.ToString() + "@bfh.ch";
-                
-                
+
+
             }
 
         }
