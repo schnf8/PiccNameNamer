@@ -99,7 +99,6 @@ namespace NameMaker.Views
         /// <param name="e"></param>
         async void ScanClick(object sender, EventArgs e)
         {
-
             var barcode = DependencyService.Get<IScanner>();
             var barcodeResult = await barcode.Barcode();
 
@@ -107,7 +106,6 @@ namespace NameMaker.Views
             {
                 searchForAPiccModel(barcodeResult);
             }
-
         }
 
         /// <summary>
@@ -121,7 +119,6 @@ namespace NameMaker.Views
                 // if either the picc name or the barcode could be found in the database
                 if ((string.Compare(piccModel.PiccName, nameOrBarcode, StringComparison.OrdinalIgnoreCase) == 0) || (string.Compare(piccModel.Barcode, nameOrBarcode, StringComparison.OrdinalIgnoreCase) == 0))
                 {
-                    await Navigation.PushAsync(new MyPICCPage(piccModel));
                     await Navigation.PushModalAsync(new MyPICCPage(piccModel));
                     return;
                 }
@@ -152,7 +149,7 @@ namespace NameMaker.Views
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 AllModels.IsVisible = true;
-                AllModels.ItemsSource = piccModelViewInstance.PiccModels.Where(x => x.PiccName.ToLower().Contains(filter.ToLower()));
+                AllModels.ItemsSource = piccModelViewInstance.PiccModels.Where(model => model.PiccName.ToLower().Contains(filter.ToLower()));
             }
             else
             {
