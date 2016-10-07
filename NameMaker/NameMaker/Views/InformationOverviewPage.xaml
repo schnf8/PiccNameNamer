@@ -10,12 +10,14 @@
                 WinPhone="20, 20, 20, 20" />
   </ContentPage.Padding>
   <ContentPage.Content>
+        <GestureFrame>
       <ListView x:Name="KnowledgeEntries" ItemSelected="OnSelect" HorizontalOptions="CenterAndExpand">
         <ListView.ItemTemplate>
           <DataTemplate>
             <TextCell Text="{Binding title}" />
           </DataTemplate>
         </ListView.ItemTemplate>
-      </ListView>      
-  </ContentPage.Content>
+      </ListView>
+        </GestureFrame>
+    </ContentPage.Content>
 </ContentPage>
